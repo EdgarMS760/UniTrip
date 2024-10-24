@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_input"
+    tools:context=".EditProfileFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@drawable/inverse_block"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/userPfpEdit"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="28dp"
+            android:src="@drawable/baseline_account_circle_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/uploadImgBtnE"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/button_style"
+            android:text="@string/uploadBtn"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userPfpEdit" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/passEditView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="64dp"
+        android:text="@string/passwordView"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <EditText
+        android:id="@+id/passEditTxt"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:background="@drawable/input_style"
+        android:ems="10"
+        android:hint="@string/passwordHint"
+        android:inputType="text"
+        android:paddingHorizontal="8sp"
+        android:paddingVertical="2sp"
+        android:text=""
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passEditView" />
+
+    <TextView
+        android:id="@+id/userEditView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:text="@string/userView"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passEditTxt" />
+
+    <EditText
+        android:id="@+id/userEditTxt"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:background="@drawable/input_style"
+        android:ems="10"
+        android:hint="@string/userHint"
+        android:inputType="text"
+        android:paddingHorizontal="8sp"
+        android:paddingVertical="2sp"
+        android:text=""
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userEditView" />
+
+    <TextView
+        android:id="@+id/phoneEditView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:text="@string/phoneView"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userEditTxt" />
+
+    <EditText
+        android:id="@+id/phoneEditTxt"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:background="@drawable/input_style"
+        android:ems="10"
+        android:hint="@string/phoneHint"
+        android:inputType="text"
+        android:paddingHorizontal="8sp"
+        android:paddingVertical="2sp"
+        android:text=""
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phoneEditView" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="64dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phoneEditTxt">
+
+        <Button
+            android:id="@+id/btnSaveEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_accept"
+            android:text="@string/saveBtnE"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnCancelEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_cancel"
+            android:text="@string/cancelBtnE"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UniTrip</string>
+    <string name="hello_blank_fragment">Hola Fragmento en blanco</string>
+    <string name="logInText">Iniciar Sesión</string>
+    <string name="logInButton">Iniciar</string>
+    <string name="signUpText">¿No tienes una cuenta?</string>
+    <string name="signUpLink">Registrarse</string>
+    <string name="emailHint">Ingresa tu Email</string>
+    <string name="passwordHint">Ingresa tu Contraseña</string>
+    <string name="firstNameHint">Ingresa tu nombre</string>
+    <string name="lastNameHint">Ingresa tu apellido</string>
+    <string name="userHint">Ingresa tu usuario</string>
+    <string name="addressHint">Ingresa tu dirección</string>
+    <string name="phoneHint">Ingresa tu telefono</string>
+    <string name="emailView">Email:</string>
+    <string name="passwordView">Contraseña:</string>
+    <string name="firstNameView">Nombre:</string>
+    <string name="lastNameView">Apellido:</string>
+    <string name="userView">Usuario:</string>
+    <string name="addressView">Dirección:</string>
+    <string name="phoneView">Telefono:</string>
+    <string name="btnNextTxt">Siguiente</string>
+    <string name="btnRegister">Registrar</string>
+    <string name="SignUpTitle">Registrarse</string>
+    <string name="logTxtLay">¿Ya tienes una cuenta?</string>
+    <string name="logLinkLay">Inicia Sesión</string>
+    <string name="uploadBtn">Subir</string>
+    <string name="fullNameViewPfp">Nombre Completo</string>
+    <string name="usernameViewPfp">@Usuario</string>
+    <string name="saveBtnE">Guardar</string>
+    <string name="cancelBtnE">Cancelar</string>
+    }<string name="nameChat">Gustavo Isai Gomez Alvarez</string>
+    <string name="messageHintTxt">Mensaje</string>
+</resources>
