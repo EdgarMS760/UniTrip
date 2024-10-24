@@ -86,12 +86,12 @@
             android:text="@string/userView"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/userTxt"
+            app:layout_constraintBottom_toTopOf="@+id/TitleCreate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/userTxt"
+            android:id="@+id/TitleCreate"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="64dp"

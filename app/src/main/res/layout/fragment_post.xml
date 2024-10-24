@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_input"
+    android:outlineAmbientShadowColor="#FFC107"
     tools:context=".PostFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@color/bg_secondary"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,44 +23,173 @@
             android:id="@+id/LogIconContainer"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="14dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="14dp"
             android:src="@drawable/unitriplogo" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="70dp"
             android:layout_marginTop="14dp"
             android:layout_weight="1" />
+
         <ImageButton
             android:id="@+id/searchBtnDir"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginTop="14dp"
             android:background="@color/bg_secondary"
-            android:src="@drawable/baseline_search_24"
-            android:layout_gravity="center_vertical"
             android:contentDescription="Search button"
-            />
+            android:src="@drawable/baseline_search_24" />
 
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnPostSig"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="5dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginEnd="68dp"
-        android:layout_marginBottom="32dp"
-        android:layout_weight="1"
-        android:background="@drawable/button_cancel"
-        android:text="@string/btnNextTxt"
-        android:textColor="@color/text_primary"
-        android:textSize="18sp"
+        android:layout_marginTop="132dp"
+        android:text="Create Post"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/llImageSection"
+        android:layout_width="285dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="52dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.527"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitulo">
+
+        <!-- Icono de la imagen -->
+
+        <!-- Botón para subir foto -->
+
+        <ImageView
+            android:id="@+id/imgIcono"
+            android:layout_width="100dp"
+            android:layout_height="108dp"
+            android:layout_marginEnd="16dp"
+            android:baselineAlignBottom="false"
+            android:contentDescription="Icono de imagen"
+            android:outlineAmbientShadowColor="#EA1010"
+            android:src="@drawable/baseline_crop_original_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imgIcono"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/btnSubirFoto"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:background="@drawable/button_cancel"
+            android:padding="8dp"
+            android:text="Subir Foto"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgIcono"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titleDescSection"
+        android:layout_width="345dp"
+        android:layout_height="396dp"
+        android:layout_marginTop="208dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitulo">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="248dp"
+            android:layout_marginBottom="280dp"
+            android:text="Title"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/btnPostSig"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/TitleCreate"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="84dp"
+            android:background="@drawable/input_style"
+            android:ems="10"
+            android:hint="Enter a title"
+            android:inputType="text"
+            android:paddingHorizontal="8sp"
+            android:paddingVertical="2sp"
+            android:text=""
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnPostSig"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginStart="68dp"
+            android:layout_marginEnd="68dp"
+            android:layout_marginBottom="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_cancel"
+            android:text="@string/btnNextTxt"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="172dp"
+            android:layout_marginBottom="164dp"
+            android:text="Description"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/btnPostSig"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/DescriptionCreate"
+            android:layout_width="233dp"
+            android:layout_height="116dp"
+            android:layout_marginTop="180dp"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/input_style"
+            android:ems="10"
+            android:hint="Enter a description"
+            android:inputType="text"
+            android:paddingHorizontal="8sp"
+            android:paddingVertical="2sp"
+            android:text=""
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
