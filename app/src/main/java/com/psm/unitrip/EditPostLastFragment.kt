@@ -23,13 +23,11 @@ class EditPostLastFragment : Fragment(), OnClickListener {
         val root = inflater.inflate(R.layout.fragment_edit_post_last, container, false)
         val searchBtnDir = root.findViewById<ImageButton>(R.id.searchBtnDir)
         searchBtnDir.setOnClickListener(this)
-        val btnCancelC = root.findViewById<Button>(R.id.btnCancelEP)
+        val btnCancelC = root.findViewById<Button>(R.id.btnCancelEPL)
         btnCancelC.setOnClickListener(this)
-        val btnSaveC = root.findViewById<Button>(R.id.btnSaveEP)
+        val btnSaveC = root.findViewById<Button>(R.id.btnSaveEPL)
         btnSaveC.setOnClickListener(this)
-        val btnPostC = root.findViewById<Button>(R.id.btnPostEP)
-        btnPostC.setOnClickListener(this)
-        val backCreateBtn = root.findViewById<ImageButton>(R.id.backCreateBtn)
+        val backCreateBtn = root.findViewById<ImageButton>(R.id.backEditBtn)
         backCreateBtn.setOnClickListener(this)
         return root
     }
@@ -38,16 +36,14 @@ class EditPostLastFragment : Fragment(), OnClickListener {
         if(p0!!.id == R.id.searchBtnDir){
             findNavController().navigate(R.id.action_editPostLastFragment_to_searchFragment)
         }
-        if(p0!!.id == R.id.btnCancelEP){
+        if(p0!!.id == R.id.btnCancelEPL){
             findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
         }
-        if(p0!!.id == R.id.btnSaveEP){
+        if(p0!!.id == R.id.btnSaveEPL){
             findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
         }
-        if(p0!!.id == R.id.btnPostEP){
-            findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
-        }
-        if(p0!!.id == R.id.backCreateBtn){
+
+        if(p0!!.id == R.id.backEditBtn){
             findNavController().navigate(R.id.action_editPostLastFragment_to_editPostFragment)
         }
     }
