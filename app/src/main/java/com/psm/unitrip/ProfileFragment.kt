@@ -12,6 +12,11 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.psm.unitrip.adapters.PostItemAdapter
+import com.psm.unitrip.classes.PostItem
+import com.psm.unitrip.providers.PostITemProvider
 
 class ProfileFragment : Fragment(), OnClickListener {
 
@@ -29,6 +34,14 @@ class ProfileFragment : Fragment(), OnClickListener {
         val btnEPfp = root.findViewById<ImageButton>(R.id.editPfpBtn)
         btnEPfp.setOnClickListener(this)
         btnLogOut.setOnClickListener(this)
+
+        val postAdapter = PostItemAdapter(PostITemProvider.PostList) { postItem ->
+            findNavController().navigate(R.id.action_landingFragment_to_editPostFragment)
+        }
+
+        val recyclerView = root.findViewById<RecyclerView>(R.id.RecyclerPostListProfile)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = postAdapter
         return root
     }
 

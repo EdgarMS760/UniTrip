@@ -8,6 +8,7 @@
     tools:context=".ProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@drawable/inverse_block"
@@ -46,52 +47,60 @@
                     android:id="@+id/usernameView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
                     android:layout_weight="14"
                     android:text="@string/usernameViewPfp"
                     android:textColor="@color/text_primary"
-                    android:textSize="32sp"
-                    android:layout_marginEnd="5dp"
-                    />
+                    android:textSize="32sp" />
 
                 <ImageButton
                     android:id="@+id/logOutBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:contentDescription="Log Out"
-                    android:layout_marginEnd="5dp"
-                    android:src="@drawable/baseline_logout_24"
-                    android:background="@drawable/inverse_button"
                     android:layout_gravity="start"
-                    />
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/inverse_button"
+                    android:contentDescription="Log Out"
+                    android:src="@drawable/baseline_logout_24" />
 
                 <ImageButton
                     android:id="@+id/editPfpBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:contentDescription="Edit Profile"
-                    android:src="@drawable/baseline_edit_24"
                     android:background="@drawable/inverse_button"
-                    />
+                    android:contentDescription="Edit Profile"
+                    android:src="@drawable/baseline_edit_24" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/fullNameView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/fullNameViewPfp"
-                    android:textSize="20sp"
                     android:textColor="@color/text_primary"
-                    />
+                    android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerPostListProfile"
+        android:layout_width="389dp"
+        android:layout_height="582dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

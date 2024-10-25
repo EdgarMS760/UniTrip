@@ -26,12 +26,12 @@ class ChatsFragment : Fragment(), OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_chats, container, false)
-        val recyclerView = root.findViewById<RecyclerView>(R.id.RecyclerChatList)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         val chatAdapter = ChatItemAdapter(ChatItemProvider.ChatItemList) { chatItem ->
             findNavController().navigate(R.id.action_chatsFragment_to_individualChatFragment)
         }
 
+        val recyclerView = root.findViewById<RecyclerView>(R.id.RecyclerChatList)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = chatAdapter
         val searchBtn = root.findViewById<ImageButton>(R.id.searchBtnDir)
         searchBtn.setOnClickListener(this)
