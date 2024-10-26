@@ -10,11 +10,13 @@ import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Spinner
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.psm.unitrip.adapters.PostItemAdapter
+import com.psm.unitrip.providers.PostITemProvider
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+
 
 class SearchFragment : Fragment() {
 
@@ -55,6 +57,15 @@ class SearchFragment : Fragment() {
         adapterF.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         filterSpinner.adapter = adapterF
+
+
+        val postAdapter = PostItemAdapter(PostITemProvider.PostList) { postItem ->
+            findNavController().navigate(R.id.action_searchFragment_to_chatsFragment)
+        }
+
+        val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerListSearch)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = postAdapter
 
         return root
     }
