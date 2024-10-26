@@ -57,47 +57,50 @@
         android:src="@drawable/baseline_arrow_back_ios_new_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
+
     <TextView
         android:id="@+id/tvEditPost2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
-        android:text="Edit Post"
+        android:layout_marginTop="8dp"
+        android:text="@string/titleEditPost"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout4"
-        android:layout_width="391dp"
-        android:layout_height="349dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="60dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backEditBtn">
+        app:layout_constraintTop_toBottomOf="@+id/tvEditPost2">
 
         <TextView
             android:id="@+id/tvPriceEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="44dp"
-            android:text="Price"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="274dp"
+            android:text="@string/priceTxtLay"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/ETPriceEditPost"
-            android:layout_width="255dp"
-            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginEnd="64dp"
             android:background="@drawable/input_style"
             android:ems="10"
             android:hint="$"
@@ -106,6 +109,7 @@
             android:paddingVertical="2sp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_hint"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvPriceEdit" />
 
@@ -113,37 +117,43 @@
             android:id="@+id/imageViewEdit"
             android:layout_width="43dp"
             android:layout_height="41dp"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="31dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="48dp"
             android:src="@drawable/baseline_location_on_24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ETPriceEditPost" />
 
         <Button
             android:id="@+id/shareLocEdit"
-            android:layout_width="216dp"
-            android:layout_height="41dp"
-            android:layout_marginStart="9dp"
-            android:layout_marginTop="28dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="65dp"
             android:background="@drawable/button_accept"
-            android:text="Compartir ubicacion"
+            android:text="@string/textLocationBtn"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewEdit"
             app:layout_constraintTop_toBottomOf="@+id/ETPriceEditPost" />
 
         <EditText
             android:id="@+id/ETLocationEdit"
-            android:layout_width="256dp"
-            android:layout_height="35dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="64dp"
             android:background="@drawable/input_style"
             android:ems="10"
-            android:hint="your location"
+            android:hint="@string/locationBtn"
             android:inputType="text"
             android:paddingHorizontal="8sp"
             android:paddingVertical="2sp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_hint"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewEdit" />
 
@@ -154,13 +164,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
+        android:layout_marginTop="128dp"
         android:layout_marginEnd="64dp"
-        android:layout_marginBottom="95dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
 
         <Button
             android:id="@+id/btnSaveEPL"
@@ -187,5 +197,22 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnPostC"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="68dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_cancel"
+        android:text="@string/postBtn"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,4 +32,14 @@
     <string name="cancelBtnE">Cancelar</string>
     }<string name="nameChat">Gustavo Isai Gomez Alvarez</string>
     <string name="messageHintTxt">Mensaje</string>
+    <string name="locationBtn">Ubicación</string>
+    <string name="postBtn">Publicar</string>
+    <string name="textLocationBtn">Mi Ubicación</string>
+    <string name="titleEditPost">Editar Post</string>
+    <string name="titleCreatePost">Crear Post</string>
+    <string name="priceTxtLay">Precio:</string>
+    <string name="titleTxtLay">Titulo:</string>
+    <string name="descTxtLay">Descripción:</string>
+    <string name="titleTxtHint">Ingresar un titulo</string>
+    <string name="descTxtHint">Ingresar una descripcion</string>
 </resources>
