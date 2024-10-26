@@ -32,7 +32,7 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         itemView.setOnClickListener {
 
-            itemView.findNavController().navigate(R.id.action_landingFragment_to_editPostFragment)
+            onClick(PostItemModel)
         }
     }
 }

@@ -37,7 +37,7 @@ class PostLastFragment : Fragment(), OnClickListener {
 
     override fun onClick(p0: View?) {
         if(p0!!.id == R.id.searchBtnDir){
-            findNavController().navigate(R.id.action_postFragment_to_searchFragment)
+            findNavController().navigate(R.id.action_postLastFragment_to_searchFragment)
         }
         if(p0!!.id == R.id.btnCancelC){
             findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)

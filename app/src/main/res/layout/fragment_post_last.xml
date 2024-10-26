@@ -7,6 +7,20 @@
     android:background="@color/bg_input"
     tools:context=".PostLastFragment">
 
+    <TextView
+        android:id="@+id/tvCreatePost2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/titleCreatePost"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
+
     <LinearLayout
         android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
@@ -64,13 +78,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
+        android:layout_marginTop="128dp"
         android:layout_marginEnd="64dp"
-        android:layout_marginBottom="16dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/btnPostC"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
 
         <Button
             android:id="@+id/btnSaveC"
@@ -103,58 +117,47 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
         android:layout_marginStart="68dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="68dp"
-        android:layout_marginBottom="32dp"
         android:layout_weight="1"
         android:background="@drawable/button_cancel"
-        android:text="@string/cancelBtnE"
+        android:text="@string/postBtn"
         android:textColor="@color/text_primary"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tvCreatePost2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
-        android:text="Create Post"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout9" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="391dp"
-        android:layout_height="349dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="60dp"
+        android:id="@+id/constraintLayout5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backCreateBtn">
+        app:layout_constraintTop_toBottomOf="@+id/tvCreatePost2">
 
         <TextView
             android:id="@+id/tvPriceCreate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="44dp"
-            android:text="Price"
+            android:layout_marginEnd="274dp"
+            android:text="@string/priceTxtLay"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/ETPriceCreatePost"
-            android:layout_width="255dp"
-            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="64dp"
             android:background="@drawable/input_style"
             android:ems="10"
             android:hint="$"
@@ -163,6 +166,7 @@
             android:paddingVertical="2sp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_hint"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvPriceCreate" />
 
@@ -170,37 +174,43 @@
             android:id="@+id/imageView"
             android:layout_width="43dp"
             android:layout_height="41dp"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="31dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="48dp"
             android:src="@drawable/baseline_location_on_24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ETPriceCreatePost" />
 
         <Button
             android:id="@+id/button"
-            android:layout_width="216dp"
-            android:layout_height="41dp"
-            android:layout_marginStart="9dp"
-            android:layout_marginTop="28dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="64dp"
             android:background="@drawable/button_accept"
-            android:text="Compartir ubicacion"
+            android:text="@string/textLocationBtn"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/ETPriceCreatePost" />
 
         <EditText
             android:id="@+id/ETLocationCreate"
-            android:layout_width="256dp"
-            android:layout_height="35dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="64dp"
             android:background="@drawable/input_style"
             android:ems="10"
-            android:hint="your location"
+            android:hint="@string/locationBtn"
             android:inputType="text"
             android:paddingHorizontal="8sp"
             android:paddingVertical="2sp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_hint"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 

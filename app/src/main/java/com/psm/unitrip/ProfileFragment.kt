@@ -36,7 +36,7 @@ class ProfileFragment : Fragment(), OnClickListener {
         btnLogOut.setOnClickListener(this)
 
         val postAdapter = PostItemAdapter(PostITemProvider.PostList) { postItem ->
-            findNavController().navigate(R.id.action_landingFragment_to_editPostFragment)
+            findNavController().navigate(R.id.action_profileFragment_to_editPostFragment)
         }
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.RecyclerPostListProfile)

@@ -31,7 +31,7 @@ class LandingFragment : Fragment(), OnClickListener {
         val searchBtn = root.findViewById<ImageButton>(R.id.searchBtnDir)
         searchBtn.setOnClickListener(this)
         val postAdapter = PostItemAdapter(PostITemProvider.PostList) { postItem ->
-            findNavController().navigate(R.id.action_chatsFragment_to_individualChatFragment)
+            findNavController().navigate(R.id.action_landingFragment_to_editPostFragment)
         }
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.RecyclerPostList)
