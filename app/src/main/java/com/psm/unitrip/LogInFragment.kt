@@ -53,6 +53,14 @@ class LogInFragment : Fragment(), OnClickListener {
                 this.listener?.moveNextPage(1)
             }
             R.id.LogBtn->{
+                p0.animate()
+                    .alpha(0.5f)
+                    .setDuration(300)
+                    .withEndAction {
+                        p0.animate()
+                            .alpha(1f)
+                            .setDuration(300)
+                    }
                 val intent =  Intent(requireContext(), MainActivity::class.java)
                 startActivity(intent)
             }

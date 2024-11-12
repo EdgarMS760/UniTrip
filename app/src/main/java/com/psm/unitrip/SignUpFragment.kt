@@ -2,6 +2,7 @@ package com.psm.unitrip
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,14 +10,19 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.imageview.ShapeableImageView
 
 class SignUpFragment : Fragment(), OnClickListener {
-    private lateinit var profileImageView: ImageView
+    private lateinit var profileImageView: ShapeableImageView
+    private lateinit var emailTxt: EditText
+
     private val PICK_IMAGE_REQUEST = 1
     private var listener: OnFragmentWelcomeActionsListener? = null
 
@@ -51,6 +57,7 @@ class SignUpFragment : Fragment(), OnClickListener {
         val signUpViewS = root.findViewById<TextView>(R.id.signUpViewS)
         signUpViewS.setOnClickListener(this)
 
+        emailTxt = root.findViewById<EditText>(R.id.emailSTxt)
         profileImageView = root.findViewById(R.id.userPfpImg)
 
         return root
@@ -80,7 +87,36 @@ class SignUpFragment : Fragment(), OnClickListener {
             }
 
             R.id.nextSBtn -> {
-                this.listener?.moveNextPage(4)
+                p0.animate()
+                    .alpha(0.5f)
+                    .setDuration(300)
+                    .withEndAction {
+                        p0.animate()
+                            .alpha(1f)
+                            .setDuration(300)
+                    }
+                var isValid = true
+                val email = emailTxt.text.toString()
+                val regex = Regex("^([a-z]+)([a-z0-9\\.]*)@([a-z0-9]+)((\\.[a-z]{2,3})+)\$")
+                val imageUri = (profileImageView.drawable as? BitmapDrawable)?.bitmap
+
+                if(imageUri == null){
+                    isValid = false
+                }
+
+                if(!regex.matches(email)){
+                    isValid = false
+                    emailTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    emailTxt.setBackgroundResource(R.drawable.input_style)
+                }
+
+                if(isValid){
+                    this.listener?.moveNextPage(4)
+                }else{
+                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+                }
+
             }
 
             R.id.signUpViewS -> {
@@ -88,6 +124,14 @@ class SignUpFragment : Fragment(), OnClickListener {
             }
 
             R.id.uploadImgBtn -> {
+                p0.animate()
+                    .alpha(0.5f)
+                    .setDuration(300)
+                    .withEndAction {
+                        p0.animate()
+                            .alpha(1f)
+                            .setDuration(300)
+                    }
                 this.abrirGaleria()
             }
         }

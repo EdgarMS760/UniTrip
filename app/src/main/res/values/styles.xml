@@ -10,4 +10,9 @@
         <item name="android:dropDownSelector">@color/text_primary</item>
 
     </style>
+
+    <style name="RoundedCornersShapeAppearance" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">64dp</item>
+    </style>
 </resources>

@@ -46,6 +46,14 @@ class WelcomeFragment : Fragment(), OnClickListener {
     override fun onClick(p0: View?) {
         when(p0!!.id){
             R.id.LogInBtn->{
+                p0.animate()
+                    .alpha(0.5f)
+                    .setDuration(300)
+                    .withEndAction {
+                        p0.animate()
+                            .alpha(1f)
+                            .setDuration(300)
+                    }
                 this.listener?.moveNextPage(2)
             }
             R.id.signUpLinked-> {

@@ -8,11 +8,16 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 
 class SignUpMid : Fragment(), OnClickListener {
     private var listener: OnFragmentWelcomeActionsListener? = null
+    private lateinit var passwordTxt: EditText
+    private lateinit var firstNameTxt: EditText
+    private lateinit var lastNameTxt: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +47,13 @@ class SignUpMid : Fragment(), OnClickListener {
         nextMidBtn.setOnClickListener(this)
         val signUpViewMid =  root.findViewById<TextView>(R.id.signUpViewMid)
         signUpViewMid.setOnClickListener(this)
+
+
+        firstNameTxt = root.findViewById<EditText>(R.id.lastNameTxt)
+        lastNameTxt = root.findViewById<EditText>(R.id.nameTxt)
+        passwordTxt = root.findViewById<EditText>(R.id.passTxtMid)
+
+
         return root
     }
 
@@ -51,7 +63,52 @@ class SignUpMid : Fragment(), OnClickListener {
                 this.listener?.moveNextPage(3)
             }
             R.id.nextMidBtn->{
-                this.listener?.moveNextPage(5)
+                p0.animate()
+                    .alpha(0.5f)
+                    .setDuration(300)
+                    .withEndAction {
+                        p0.animate()
+                            .alpha(1f)
+                            .setDuration(300)
+                    }
+
+                var isValid = true
+                val regexPassword = Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[(!”#\$%&\\/=?¡¿:;,._+*{})]).{8,50}\$")
+                val regexName = Regex("^([A-Za-zÑñÁáÉéÍíÓóÚú]+[\\'\\-]?[A-Za-zÑñÁáÉéÍíÓóÚú]+)(\\s+([A-Za-zÑñÁáÉéÍíÓóÚú]+[\\'\\-]?[A-Za-zÑñÁáÉéÍíÓóÚú]+))*\$")
+
+                val password = passwordTxt.text.toString()
+                val firstName = firstNameTxt.text.toString()
+                val lastName = lastNameTxt.text.toString()
+
+
+                if(!regexPassword.matches(password)){
+                    isValid = false
+                    passwordTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    passwordTxt.setBackgroundResource(R.drawable.input_style)
+                }
+
+                if(!regexName.matches(firstName)){
+                    isValid = false
+                    firstNameTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    firstNameTxt.setBackgroundResource(R.drawable.input_style)
+                }
+
+                if(!regexName.matches(lastName)){
+                    isValid = false
+                    lastNameTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    lastNameTxt.setBackgroundResource(R.drawable.input_style)
+                }
+
+                if(isValid){
+                    this.listener?.moveNextPage(5)
+                }else{
+                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+                }
+
+
             }
             R.id.signUpViewMid-> {
                 this.listener?.moveNextPage(2)
