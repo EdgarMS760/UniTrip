@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.psm.unitrip.R
 import com.psm.unitrip.classes.ChatItem
 import com.psm.unitrip.classes.PostItem
@@ -12,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val imageView: ImageView = view.findViewById(R.id.imagePublicacion)
+    val imageView: ViewPager2 = view.findViewById(R.id.imagePublicacion)
     val usernameView: TextView = view.findViewById(R.id.username)
     val ubicacionView: TextView = view.findViewById(R.id.ubicacion)
     val tituloView: TextView = view.findViewById(R.id.tituloPublicacion)
@@ -22,7 +23,7 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
     val iconoEdit: ImageView = view.findViewById(R.id.iconoEdit)
 
     fun render(PostItemModel: PostItem, onClick: (PostItem) -> Unit){
-        imageView.setImageResource(PostItemModel.imagen)
+        imageView.adapter = ImageAdapter(PostItemModel.imagenes);
         usernameView.text = PostItemModel.username
         ubicacionView.text = PostItemModel.ubicacion
         tituloView.text = PostItemModel.titulo
@@ -30,7 +31,7 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
         descripcionView.text = PostItemModel.descripcion
         fechaView.text = PostItemModel.fecha
 
-        itemView.setOnClickListener {
+        iconoEdit.setOnClickListener {
 
             onClick(PostItemModel)
         }

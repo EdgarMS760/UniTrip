@@ -72,6 +72,7 @@
             android:layout_marginStart="135dp"
             android:layout_marginEnd="138dp"
             android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/baseline_account_circle_24"
             app:layout_constraintBottom_toTopOf="@+id/uploadImgBtn"
             app:layout_constraintEnd_toEndOf="parent"

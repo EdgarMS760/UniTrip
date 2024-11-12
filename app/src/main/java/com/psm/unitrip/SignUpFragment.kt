@@ -10,12 +10,13 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
 class SignUpFragment : Fragment(), OnClickListener {
-
+    private lateinit var profileImageView: ImageView
     private val PICK_IMAGE_REQUEST = 1
     private var listener: OnFragmentWelcomeActionsListener? = null
 
@@ -50,6 +51,7 @@ class SignUpFragment : Fragment(), OnClickListener {
         val signUpViewS = root.findViewById<TextView>(R.id.signUpViewS)
         signUpViewS.setOnClickListener(this)
 
+        profileImageView = root.findViewById(R.id.userPfpImg)
 
         return root
     }
@@ -65,7 +67,9 @@ class SignUpFragment : Fragment(), OnClickListener {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 val uriImagenSeleccionada = result.data?.data
-                println("Imagen seleccionada: $uriImagenSeleccionada")
+                if (uriImagenSeleccionada != null) {
+                    profileImageView.setImageURI(uriImagenSeleccionada)
+                }
             }
         }
 

@@ -23,13 +23,10 @@
         <!-- Imagen de la publicación -->
 
         <!-- Información de usuario y ubicación -->
-        <ImageView
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/imagePublicacion"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:contentDescription="publicacion_imagen"
-            android:scaleType="centerCrop"
-            android:src="@drawable/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

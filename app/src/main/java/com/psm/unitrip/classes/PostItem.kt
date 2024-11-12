@@ -1,7 +1,7 @@
 package com.psm.unitrip.classes
 
 data class PostItem(
-    val imagen: Int,
+    val imagenes: List<Int>,
     val username: String,
     val ubicacion: String,
     val titulo: String,
