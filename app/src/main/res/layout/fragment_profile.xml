@@ -51,6 +51,8 @@
                     android:layout_weight="14"
                     android:text="@string/usernameViewPfp"
                     android:textColor="@color/text_primary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textSize="32sp" />
 
                 <ImageButton
@@ -86,6 +88,8 @@
                     android:layout_weight="14"
                     android:text="@string/fullNameViewPfp"
                     android:textColor="@color/text_primary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
