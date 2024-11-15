@@ -9,12 +9,17 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
+import com.psm.unitrip.classes.SessionManager
 
 
 class LogInFragment : Fragment(), OnClickListener {
     private var listener: OnFragmentWelcomeActionsListener? = null
+    private lateinit var emailTxt: EditText
+    private lateinit var passTxt: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,22 +42,26 @@ class LogInFragment : Fragment(), OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_log_in, container, false)
-        val backLogInBtn =  root.findViewById<ImageButton>(R.id.backLogInBtn)
+        val backLogInBtn = root.findViewById<ImageButton>(R.id.backLogInBtn)
         backLogInBtn.setOnClickListener(this)
-        val LogBtn =  root.findViewById<Button>(R.id.LogBtn)
+        val LogBtn = root.findViewById<Button>(R.id.LogBtn)
         LogBtn.setOnClickListener(this)
-        val signUpViewLI =  root.findViewById<TextView>(R.id.signUpViewLI)
+        val signUpViewLI = root.findViewById<TextView>(R.id.signUpViewLI)
         signUpViewLI.setOnClickListener(this)
+
+        emailTxt = root.findViewById<EditText>(R.id.emailTxt)
+        passTxt = root.findViewById<EditText>(R.id.passTxt)
 
         return root
     }
 
     override fun onClick(p0: View?) {
-        when(p0!!.id){
-            R.id.backLogInBtn->{
+        when (p0!!.id) {
+            R.id.backLogInBtn -> {
                 this.listener?.moveNextPage(1)
             }
-            R.id.LogBtn->{
+
+            R.id.LogBtn -> {
                 p0.animate()
                     .alpha(0.5f)
                     .setDuration(300)
@@ -61,13 +70,25 @@ class LogInFragment : Fragment(), OnClickListener {
                             .alpha(1f)
                             .setDuration(300)
                     }
-                val intent =  Intent(requireContext(), MainActivity::class.java)
-                startActivity(intent)
+
+                val email = emailTxt.text.toString()
+                val password = passTxt.text.toString()
+
+                SessionManager.logIn(email, password, requireContext()){ success ->
+                    if(success){
+                        val intent =  Intent(requireContext(), MainActivity::class.java)
+                        startActivity(intent)
+                    }else{
+                        Toast.makeText(activity?.applicationContext,"Fallo de Credenciales", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
-            R.id.signUpViewLI-> {
+
+            R.id.signUpViewLI -> {
                 this.listener?.moveNextPage(3)
             }
-        }    }
+        }
+    }
 
 
 }

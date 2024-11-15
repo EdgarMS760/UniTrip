@@ -13,15 +13,25 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.imageview.ShapeableImageView
+import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.UserManager
+import com.psm.unitrip.Models.Usuario
+import com.psm.unitrip.Utilities.ImageUtilities
+import com.psm.unitrip.classes.RestEngine
+import com.psm.unitrip.classes.SessionManager
+import java.util.Base64
 
 class EditProfileFragment : Fragment(), OnClickListener {
     private lateinit var profileImageView: ShapeableImageView
     private lateinit var passwordTxt: EditText
     private lateinit var phoneTxt: EditText
     private lateinit var usernameTxt: EditText
+    private var imageChange: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +55,45 @@ class EditProfileFragment : Fragment(), OnClickListener {
         usernameTxt = root.findViewById<EditText>(R.id.userEditTxt)
         phoneTxt = root.findViewById<EditText>(R.id.phoneEditTxt)
 
+        val usuario = SessionManager.getUsuario()
+
+        if(usuario !== null){
+            passwordTxt.setText(usuario.password)
+            usernameTxt.setText(usuario.username)
+            phoneTxt.setText(usuario.telefono)
+
+            val strImage:String =  usuario.profilePic.replace("data:image/*;base64,","")
+            val byteArray =  Base64.getDecoder().decode(strImage)
+
+            if(byteArray != null){
+                profileImageView.setImageBitmap(ImageUtilities.getBitMapFromByteArray(byteArray))
+            }
+
+        }
+
         return root
     }
+
+
+    private fun mostrarAlerta() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        builder.setTitle("Descartar Cambios")
+        builder.setMessage("¿Estás seguro de que no quieres guardar los cambios?")
+
+
+        builder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+        }
+
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
 
     private fun abrirGaleria() {
         val intent = Intent(Intent.ACTION_PICK).apply {
@@ -61,6 +108,7 @@ class EditProfileFragment : Fragment(), OnClickListener {
                 val uriImagenSeleccionada = result.data?.data
                 if (uriImagenSeleccionada != null) {
                     profileImageView.setImageURI(uriImagenSeleccionada)
+                    imageChange = true
                 }
             }
         }
@@ -75,7 +123,7 @@ class EditProfileFragment : Fragment(), OnClickListener {
                         .alpha(1f)
                         .setDuration(300)
                 }
-            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+            mostrarAlerta()
         }
         if (p0!!.id == R.id.btnSaveEdit) {
             p0.animate()
@@ -93,15 +141,13 @@ class EditProfileFragment : Fragment(), OnClickListener {
             var regexUser = Regex("^[0-9A-Za-zÑñÁáÉéÍíÓóÚú\\s]{2,20}\$")
             val regexPassword = Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[(!”#\$%&\\/=?¡¿:;,._+*{})]).{8,50}\$")
 
-            val imageUri = (profileImageView.drawable as? BitmapDrawable)?.bitmap
+
 
             val password = passwordTxt.text.toString()
             val phone = phoneTxt.text.toString()
             val username = usernameTxt.text.toString()
 
-            if(imageUri == null){
-                isValid = false
-            }
+
 
             if(!regexPassword.matches(password)){
                 isValid = false
@@ -126,7 +172,41 @@ class EditProfileFragment : Fragment(), OnClickListener {
 
 
             if(isValid){
-                findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                val factory = ManagerFactory(RestEngine.getRestEngine())
+                val userManager = factory.createManager(Usuario::class.java)
+                val user = SessionManager.getUsuario()
+
+                if(imageChange){
+                    val imageUri = (profileImageView.drawable as? BitmapDrawable)?.bitmap
+
+                    if(imageUri !== null){
+                        val profilePfp = ImageUtilities.getByteArrayFromBitmap(imageUri)
+                        val encodedString:String =  Base64.getEncoder().encodeToString(profilePfp)
+
+                        val strEncodeImage:String = "data:image/*;base64," + encodedString
+
+
+                        (userManager as? UserManager)?.updatePhoto(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", strEncodeImage)) { success ->
+                            if(success){
+                                Toast.makeText(this.requireContext(), "Se actualizo con exito", Toast.LENGTH_SHORT).show()
+                                findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                            }else{
+                                Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                    }
+                }else{
+                    userManager?.update(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", "")){success ->
+                        if(success){
+                            Toast.makeText(this.requireContext(), "Se actualizo con exito", Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                        }else{
+                            Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                }
             }else{
                 Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
             }

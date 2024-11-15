@@ -1,6 +1,7 @@
 package com.psm.unitrip
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,12 +9,23 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
+import com.psm.unitrip.adapters.ImageUriAdapter
+import com.psm.unitrip.classes.CreatePostViewModel
 
 class PostFragment : Fragment(), OnClickListener {
+    private lateinit var imageView: ViewPager2
+    private lateinit var titleTxt: EditText
+    private lateinit var descriptionTxt: EditText
+    private val selectedImages = mutableListOf<Uri>()
+    val createPostViewModel: CreatePostViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +45,29 @@ class PostFragment : Fragment(), OnClickListener {
         val btnSubirFoto = root.findViewById<Button>(R.id.btnSubirFoto)
         btnSubirFoto.setOnClickListener(this)
 
+        titleTxt = root.findViewById<EditText>(R.id.usernameTxtSU)
+        descriptionTxt = root.findViewById<EditText>(R.id.DescriptionCreate)
+        imageView = root.findViewById<ViewPager2>(R.id.imgIcono)
+
+        if(createPostViewModel.title !== null){
+            titleTxt.setText(createPostViewModel.title)
+        }
+
+        if(createPostViewModel.descripcion !== null){
+            descriptionTxt.setText(createPostViewModel.descripcion)
+        }
+
+        if(createPostViewModel.images !== null){
+            imageView.adapter = ImageUriAdapter(createPostViewModel.images as MutableList<Uri>)
+        }
+
         return root
     }
 
     private fun abrirGaleria() {
         val intent = Intent(Intent.ACTION_PICK).apply {
             type = "image/*"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         }
         seleccionarImagen.launch(intent)
     }
@@ -46,19 +75,90 @@ class PostFragment : Fragment(), OnClickListener {
     private val seleccionarImagen =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
-                val uriImagenSeleccionada = result.data?.data
-                println("Imagen seleccionada: $uriImagenSeleccionada")
+                selectedImages.clear()
+                result.data?.let { data ->
+                    val clipData = data.clipData
+                    if (clipData != null) {
+                        for (i in 0 until clipData.itemCount) {
+                            selectedImages.add(clipData.getItemAt(i).uri)
+                        }
+                    } else {
+                        data.data?.let { uri ->
+                            selectedImages.add(uri)
+                        }
+                    }
+
+                    // Update the ViewPager2 adapter with the selected images
+                    val adapter = ImageUriAdapter(selectedImages)
+                    imageView.adapter = adapter
+                }
             }
         }
 
     override fun onClick(p0: View?) {
         if(p0!!.id == R.id.btnPostSig){
-            findNavController().navigate(R.id.action_postFragment_to_postLastFragment)
+            p0.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    p0.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
+            var isValid = true
+
+            val title = titleTxt.text.toString()
+            val descripcion = descriptionTxt.text.toString()
+
+            if(selectedImages.isEmpty()){
+                isValid = false
+            }
+
+            if(title.isEmpty()){
+                titleTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                isValid = false
+            }else{
+                titleTxt.setBackgroundResource(R.drawable.input_style)
+            }
+
+            if(descripcion.isEmpty()){
+                descriptionTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                isValid = false
+            }else{
+                descriptionTxt.setBackgroundResource(R.drawable.input_style)
+            }
+
+            if(isValid){
+                createPostViewModel.title = title
+                createPostViewModel.descripcion = descripcion
+                createPostViewModel.images = selectedImages
+
+                findNavController().navigate(R.id.action_postFragment_to_postLastFragment)
+            }else{
+                Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+            }
+
         }
         if(p0!!.id == R.id.searchBtnDir){
+            p0.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    p0.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
             findNavController().navigate(R.id.action_postFragment_to_searchFragment)
         }
         if(p0!!.id == R.id.btnSubirFoto){
+            p0.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    p0.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
             this.abrirGaleria()
         }
     }

@@ -17,11 +17,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.imageview.ShapeableImageView
+import com.psm.unitrip.classes.RegistroViewModel
 
 class SignUpFragment : Fragment(), OnClickListener {
     private lateinit var profileImageView: ShapeableImageView
     private lateinit var emailTxt: EditText
+    val registroViewModel: RegistroViewModel by activityViewModels()
 
     private val PICK_IMAGE_REQUEST = 1
     private var listener: OnFragmentWelcomeActionsListener? = null
@@ -54,11 +57,18 @@ class SignUpFragment : Fragment(), OnClickListener {
         nextSBtn.setOnClickListener(this)
         val uploadImgBtn = root.findViewById<Button>(R.id.uploadImgBtn)
         uploadImgBtn.setOnClickListener(this)
-        val signUpViewS = root.findViewById<TextView>(R.id.signUpViewS)
-        signUpViewS.setOnClickListener(this)
 
         emailTxt = root.findViewById<EditText>(R.id.emailSTxt)
         profileImageView = root.findViewById(R.id.userPfpImg)
+
+        if(registroViewModel.email != null){
+            emailTxt.setText(registroViewModel.email)
+        }
+
+
+        if(registroViewModel.photoUri != null){
+            profileImageView.setImageBitmap(registroViewModel.photoUri)
+        }
 
         return root
     }
@@ -112,15 +122,13 @@ class SignUpFragment : Fragment(), OnClickListener {
                 }
 
                 if(isValid){
+                    registroViewModel.email = email
+                    registroViewModel.photoUri = imageUri
                     this.listener?.moveNextPage(4)
                 }else{
                     Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
 
-            }
-
-            R.id.signUpViewS -> {
-                this.listener?.moveNextPage(2)
             }
 
             R.id.uploadImgBtn -> {

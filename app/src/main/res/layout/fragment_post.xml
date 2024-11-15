@@ -76,14 +76,12 @@
 
         <!-- Botón para subir foto -->
 
-        <ImageView
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/imgIcono"
             android:layout_width="100dp"
             android:layout_height="108dp"
             android:baselineAlignBottom="false"
-            android:contentDescription="Icono de imagen"
-            android:outlineAmbientShadowColor="#EA1010"
-            android:src="@drawable/baseline_crop_original_24"
+            android:background="@drawable/input_style"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -109,7 +107,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llImageSection">

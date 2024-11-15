@@ -10,16 +10,33 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.PostManager
+import com.psm.unitrip.Models.Chat
+import com.psm.unitrip.Models.Post
+import com.psm.unitrip.Models.Usuario
+import com.psm.unitrip.Utilities.ImageUtilities
 import com.psm.unitrip.adapters.PostItemAdapter
+import com.psm.unitrip.classes.CreatePostViewModel
+import com.psm.unitrip.classes.EditPostViewModel
 import com.psm.unitrip.classes.PostItem
+import com.psm.unitrip.classes.RestEngine
+import com.psm.unitrip.classes.SessionManager
 import com.psm.unitrip.providers.PostITemProvider
+import java.util.Base64
 
 class ProfileFragment : Fragment(), OnClickListener {
-
+    val createPostViewModel: CreatePostViewModel by activityViewModels()
+    val editPostViewModel: EditPostViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,24 +47,73 @@ class ProfileFragment : Fragment(), OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val root:View = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        val loadIcon = root.findViewById<CircularProgressIndicator>(R.id.loadPostProfileIndicator)
+
+        loadIcon.visibility = View.VISIBLE
+
+        val user: Usuario? = SessionManager.getUsuario()
+        //Poner la informacion del Usuario
+
+        val userPfp: ShapeableImageView = root.findViewById<ShapeableImageView>(R.id.userPfpAct)
+
+        if(user !== null){
+            val usernameView = root.findViewById<TextView>(R.id.usernameView)
+            val nombreView = root.findViewById<TextView>(R.id.fullNameView)
+            val nombreCompleto = user.nombre + " " + user.apellido
+
+            val strImage:String =  user.profilePic.replace("data:image/*;base64,","")
+            val byteArray =  Base64.getDecoder().decode(strImage)
+
+            if(byteArray != null){
+                userPfp.setImageBitmap(ImageUtilities.getBitMapFromByteArray(byteArray))
+            }
+
+            usernameView.setText(user.username)
+            nombreView.setText(nombreCompleto)
+        }
+
+
         val btnLogOut = root.findViewById<ImageButton>(R.id.logOutBtn)
         val btnEPfp = root.findViewById<ImageButton>(R.id.editPfpBtn)
         btnEPfp.setOnClickListener(this)
         btnLogOut.setOnClickListener(this)
 
-        val postAdapter = PostItemAdapter(PostITemProvider.PostList) { postItem ->
+        val postAdapter = PostItemAdapter(emptyList()) { postItem ->
             findNavController().navigate(R.id.action_profileFragment_to_editPostFragment)
         }
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.RecyclerPostListProfile)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = postAdapter
+
+
+        val factory = ManagerFactory(RestEngine.getRestEngine())
+
+        val postManager = factory.createManager(Post::class.java)
+
+        if(SessionManager.getUsuario() != null){
+            val user = SessionManager.getUsuario()
+            (postManager as? PostManager)?.getMyPosts(user!!.idUsuario){posts->
+                loadIcon.visibility = View.GONE
+                if(posts != null){
+                    postAdapter.updatePosts(posts)
+                }
+            }
+        }
+
+
+        editPostViewModel.reset()
+        createPostViewModel.reset()
+
         return root
     }
 
     override fun onClick(p0: View?) {
 
         if(p0!!.id == R.id.logOutBtn){
+            SessionManager.logOut()
+
             val intent =  Intent(requireContext(), WelcomeActivity::class.java)
             startActivity(intent)
         }

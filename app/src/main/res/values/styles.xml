@@ -15,4 +15,10 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">64dp</item>
     </style>
+
+    <style name="RoundedCornersShapeAppearanceChat" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">32dp</item>
+    </style>
+
 </resources>

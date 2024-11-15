@@ -8,14 +8,26 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.adapters.ChatItemAdapter
+import com.psm.unitrip.classes.ChatViewModel
+import com.psm.unitrip.classes.CreatePostViewModel
+import com.psm.unitrip.classes.EditPostViewModel
+import com.psm.unitrip.classes.RestEngine
+import com.psm.unitrip.classes.SessionManager
 import com.psm.unitrip.providers.ChatItemProvider
 
 class ChatsFragment : Fragment(), OnClickListener {
-
+    val createPostViewModel: CreatePostViewModel by activityViewModels()
+    val editPostViewModel: EditPostViewModel by activityViewModels()
+    val chatVM: ChatViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,15 +38,42 @@ class ChatsFragment : Fragment(), OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_chats, container, false)
-        val chatAdapter = ChatItemAdapter(ChatItemProvider.ChatItemList) { chatItem ->
+
+        val loadIcon = root.findViewById<CircularProgressIndicator>(R.id.progressIndicator)
+
+        loadIcon.visibility = View.VISIBLE
+
+        val factory = ManagerFactory(RestEngine.getRestEngine())
+
+        val chatManager = factory.createManager(Chat::class.java)
+
+        val chatAdapter = ChatItemAdapter(emptyList()) { Chat ->
+            chatVM.chatAct = Chat
             findNavController().navigate(R.id.action_chatsFragment_to_individualChatFragment)
         }
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.RecyclerChatList)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = chatAdapter
+
+        if(SessionManager.getUsuario() != null){
+            val user = SessionManager.getUsuario()
+            chatManager?.getAll(user!!.idUsuario){chats->
+                loadIcon.visibility = View.GONE
+                if(chats != null){
+                    chatAdapter.updateChats(chats)
+                }
+            }
+        }
+
         val searchBtn = root.findViewById<ImageButton>(R.id.searchBtnDir)
         searchBtn.setOnClickListener(this)
+
+
+
+        editPostViewModel.reset()
+        createPostViewModel.reset()
+
         return root
     }
 

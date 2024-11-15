@@ -78,13 +78,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="128dp"
         android:layout_marginEnd="64dp"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/btnPostC"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/btnSaveC"
@@ -117,23 +117,25 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
         android:layout_marginStart="68dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="68dp"
+        android:layout_marginBottom="95dp"
         android:layout_weight="1"
-        android:background="@drawable/button_cancel"
+        android:background="@drawable/button_accept"
         android:text="@string/postBtn"
         android:textColor="@color/text_primary"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout9" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="96dp"
+        android:layout_marginBottom="138dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCreatePost2">
@@ -181,7 +183,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ETPriceCreatePost" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/locationBtnGet"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
@@ -204,6 +206,7 @@
             android:layout_marginEnd="64dp"
             android:background="@drawable/input_style"
             android:ems="10"
+            android:enabled="false"
             android:hint="@string/locationBtn"
             android:inputType="text"
             android:paddingHorizontal="8sp"

@@ -9,10 +9,13 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import com.psm.unitrip.classes.RegistroViewModel
 
 class WelcomeFragment : Fragment(), OnClickListener {
 
     private var listener: OnFragmentWelcomeActionsListener? = null
+    val registroViewModel: RegistroViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,9 @@ class WelcomeFragment : Fragment(), OnClickListener {
         LogInBtn.setOnClickListener(this)
         val signUpLinked =  root.findViewById<TextView>(R.id.signUpLinked)
         signUpLinked.setOnClickListener(this)
+
+        registroViewModel.reset()
+
         return root
     }
 

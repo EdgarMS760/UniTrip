@@ -3,10 +3,17 @@ package com.psm.unitrip.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.R
 import com.psm.unitrip.classes.ChatItem
 
-class ChatItemAdapter(private val ChatItemList: List<ChatItem>, private val onClick: (ChatItem) -> Unit): RecyclerView.Adapter<ChatItemHolder>() {
+class ChatItemAdapter(private var ChatItemList: List<Chat>, private val onClick: (Chat) -> Unit): RecyclerView.Adapter<ChatItemHolder>() {
+
+    fun updateChats(newChats: List<Chat>) {
+        ChatItemList = newChats
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatItemHolder {
         val layoutinflater = LayoutInflater.from(parent.context)
         return ChatItemHolder(layoutinflater.inflate(R.layout.chatitem, parent, false))

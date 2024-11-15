@@ -12,12 +12,15 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import com.psm.unitrip.classes.RegistroViewModel
 
 class SignUpMid : Fragment(), OnClickListener {
     private var listener: OnFragmentWelcomeActionsListener? = null
     private lateinit var passwordTxt: EditText
     private lateinit var firstNameTxt: EditText
     private lateinit var lastNameTxt: EditText
+    val registroViewModel: RegistroViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +48,24 @@ class SignUpMid : Fragment(), OnClickListener {
         backStartBtn.setOnClickListener(this)
         val nextMidBtn =  root.findViewById<Button>(R.id.nextMidBtn)
         nextMidBtn.setOnClickListener(this)
-        val signUpViewMid =  root.findViewById<TextView>(R.id.signUpViewMid)
-        signUpViewMid.setOnClickListener(this)
 
 
         firstNameTxt = root.findViewById<EditText>(R.id.lastNameTxt)
         lastNameTxt = root.findViewById<EditText>(R.id.nameTxt)
         passwordTxt = root.findViewById<EditText>(R.id.passTxtMid)
+
+        if(registroViewModel.nombre != null){
+            firstNameTxt.setText(registroViewModel.nombre)
+        }
+
+
+        if(registroViewModel.apellido != null){
+            lastNameTxt.setText(registroViewModel.apellido)
+        }
+
+        if(registroViewModel.password != null){
+            passwordTxt.setText(registroViewModel.password)
+        }
 
 
         return root
@@ -103,15 +117,15 @@ class SignUpMid : Fragment(), OnClickListener {
                 }
 
                 if(isValid){
+                    registroViewModel.password = password
+                    registroViewModel.nombre = firstName
+                    registroViewModel.apellido = lastName
                     this.listener?.moveNextPage(5)
                 }else{
                     Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
 
 
-            }
-            R.id.signUpViewMid-> {
-                this.listener?.moveNextPage(2)
             }
         }
     }
