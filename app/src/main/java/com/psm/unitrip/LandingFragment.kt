@@ -35,6 +35,7 @@ class LandingFragment : Fragment(), OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val db = UserApplication.dbHelper.writableDatabase
 
     }
 
