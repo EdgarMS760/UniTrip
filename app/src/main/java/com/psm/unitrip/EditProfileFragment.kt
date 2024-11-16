@@ -188,6 +188,7 @@ class EditProfileFragment : Fragment(), OnClickListener {
 
                         (userManager as? UserManager)?.updatePhoto(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", strEncodeImage)) { success ->
                             if(success){
+                                SessionManager.saveSession(requireContext())
                                 Toast.makeText(this.requireContext(), "Se actualizo con exito", Toast.LENGTH_SHORT).show()
                                 findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
                             }else{

@@ -76,6 +76,7 @@ class LogInFragment : Fragment(), OnClickListener {
 
                 SessionManager.logIn(email, password, requireContext()){ success ->
                     if(success){
+                        println("hOLA")
                         val intent =  Intent(requireContext(), MainActivity::class.java)
                         startActivity(intent)
                     }else{

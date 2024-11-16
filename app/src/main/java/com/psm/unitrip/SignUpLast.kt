@@ -157,6 +157,7 @@ class SignUpLast : Fragment(), OnClickListener {
                         userManager.add(Usuario(0, registroViewModel.email.toString(), registroViewModel.password.toString(), registroViewModel.nombre.toString(), registroViewModel.apellido.toString(), username, phone, address, strEncodeImage)){success ->
                             if(success){
                                 Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
+                                SessionManager.saveSession(requireContext())
                                 val intent =  Intent(requireContext(), MainActivity::class.java)
                                 startActivity(intent)
                             }else{

@@ -58,7 +58,7 @@ class SearchFragment : Fragment() {
 
         val adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.spinner_item,
             orderOptions
         )
 
@@ -68,7 +68,7 @@ class SearchFragment : Fragment() {
 
         val adapterF = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.spinner_item,
             filterOptions
         )
 

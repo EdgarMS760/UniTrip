@@ -2,6 +2,7 @@ package com.psm.unitrip.classes
 
 import android.content.Context
 import android.widget.Toast
+import com.google.gson.Gson
 import com.psm.unitrip.API.UserService
 import com.psm.unitrip.Models.Usuario
 import com.psm.unitrip.Requests.LogInRequest
@@ -16,6 +17,10 @@ import retrofit2.Response
 object SessionManager {
     private var UsuarioActual: Usuario? = null
     private var isLoggedIn = false
+    private const val SHARED_PREFS_NAME = "UnitripSession"
+    private const val USER_KEY = "Usuario"
+    private const val LOGGED_IN_KEY = "isLoggedIn"
+
 
     fun getUsuario(): Usuario? {
         return UsuarioActual;
@@ -42,6 +47,7 @@ object SessionManager {
                     val body = response.body()
                     UsuarioActual = body!!.data;
                     isLoggedIn = true
+                    saveSession(context)
                     callback(true)
                 }else{
                     callback(false)
@@ -60,17 +66,37 @@ object SessionManager {
         UsuarioActual = userActualizado
     }
 
-    fun saveSession(){
+    fun saveSession(context: Context){
+        val gson = Gson()
+
+        val userJson: String = gson.toJson(UsuarioActual)
+
+        val sharedPrefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPrefs.edit()
+        editor.putString(USER_KEY, userJson)
+        editor.putBoolean(LOGGED_IN_KEY, isLoggedIn)
+        editor.apply()
 
     }
 
-    fun loadSession(){
+    fun loadSession(context: Context){
+        val gson = Gson()
+        val sharedPrefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        val userJson = sharedPrefs.getString(USER_KEY, null)
+        val loggedIn = sharedPrefs.getBoolean(LOGGED_IN_KEY, false)
 
+        if (userJson != null && loggedIn) {
+            UsuarioActual = gson.fromJson(userJson, Usuario::class.java)
+            isLoggedIn = true
+        }
     }
 
-    fun logOut(){
+    fun logOut(context: Context){
         this.UsuarioActual = null
         this.isLoggedIn = false
+        val sharedPrefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        sharedPrefs.edit().clear().apply()
+
     }
 
 }

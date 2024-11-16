@@ -1,6 +1,7 @@
 package com.psm.unitrip
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import com.psm.unitrip.classes.RegistroViewModel
+import com.psm.unitrip.classes.SessionManager
 
 class WelcomeFragment : Fragment(), OnClickListener {
 

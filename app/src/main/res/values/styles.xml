@@ -5,10 +5,15 @@
         <item name="android:textColor">@color/text_primary</item>
     </style>
 
-    <style name="SpinnerItemStyle"  parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="android:dropDownSelector">@color/text_primary</item>
+    <style name="SpinnerItemStyle" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColor">@color/text_primary</item> <!-- Selected item text color -->
+        <item name="android:dropDownSelector">@color/text_primary</item> <!-- Dropdown selector color -->
+        <item name="android:popupBackground">@color/white</item> <!-- Popup background color -->
+        <item name="android:dropDownItemStyle">@style/SpinnerDropDownItemStyle</item>
+    </style>
 
+    <style name="SpinnerDropDownItemStyle">
+        <item name="android:textColor">@color/text_primary</item> <!-- Text color for each dropdown item -->
     </style>
 
     <style name="RoundedCornersShapeAppearance" parent="ShapeAppearance.MaterialComponents.SmallComponent">
