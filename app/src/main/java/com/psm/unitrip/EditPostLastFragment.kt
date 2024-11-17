@@ -38,8 +38,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
         backCreateBtn.setOnClickListener(this)
         val btnPostC = root.findViewById<Button>(R.id.btnPostC)
         btnPostC.setOnClickListener(this)
-        val shareLocEdit = root.findViewById<Button>(R.id.shareLocEdit)
-        shareLocEdit.setOnClickListener(this)
+
 
 
         priceTxt = root.findViewById<EditText>(R.id.ETPriceEditPost)
@@ -137,6 +136,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
 
             var isValid = true
             val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
+            val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
 
             val locationStr = locationTxt.text.toString()
             val price = priceTxt.text.toString()
@@ -148,7 +148,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                 priceTxt.setBackgroundResource(R.drawable.input_style)
             }
 
-            if(locationStr.isEmpty()){
+            if(!regexDomicilio.matches(locationStr)){
                 isValid = false
                 locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
             }else{
@@ -156,6 +156,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
             }
 
             if(isValid){
+                findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
             }else{
                 Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
             }
@@ -177,17 +178,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
 
         }
 
-        if(p0!!.id == R.id.shareLocEdit){
-            p0.animate()
-                .alpha(0.5f)
-                .setDuration(300)
-                .withEndAction {
-                    p0.animate()
-                        .alpha(1f)
-                        .setDuration(300)
-                }
 
-        }
 
     }
 

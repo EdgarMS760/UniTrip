@@ -13,7 +13,6 @@ class DataDbHelper (var context: Context): SQLiteOpenHelper(context,SetDB.DB_NAM
 
     override fun onCreate(db: SQLiteDatabase?){
         try{
-            Toast.makeText(context, "Se creo la base?", Toast.LENGTH_SHORT).show()
             val createtableUsers:String =  "CREATE TABLE " + SetDB.tableUsers.TABLE_NAME + "(" +
                     SetDB.tableUsers.COL_IDUSUARIO + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     SetDB.tableUsers.COL_EMAIL + " VARCHAR(100)," +
@@ -77,6 +76,32 @@ class DataDbHelper (var context: Context): SQLiteOpenHelper(context,SetDB.DB_NAM
 
 
             db?.execSQL(createtableImagenes)
+
+
+            val createtableDraft:String =  "CREATE TABLE " + SetDB.tableDraftPost.TABLE_NAME + "(" +
+                    SetDB.tablePost.COL_IDPOST + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    SetDB.tablePost.COL_IDUSUARIO + " INTEGER," +
+                    SetDB.tablePost.COL_TITLE + " VARCHAR(100)," +
+                    SetDB.tablePost.COL_DESCRIPTION + " TEXT," +
+                    SetDB.tablePost.COL_PRECIO + " TEXT," +
+                    SetDB.tablePost.COL_STATUS + " CHAR(1)," +
+                    SetDB.tablePost.COL_LOCATION + " VARCHAR(150)," +
+                    SetDB.tablePost.COL_FECHAMODIFICACION + " TEXT," +
+                    SetDB.tablePost.COL_FECHACREACION + " TEXT," +
+                    "FOREIGN KEY(" + SetDB.tablePost.COL_IDUSUARIO + ") REFERENCES " + SetDB.tableUsers.TABLE_NAME + "(" + SetDB.tableUsers.COL_IDUSUARIO + "))"
+
+
+            db?.execSQL(createtableDraft)
+
+
+            val createtableDraftImagenes:String =  "CREATE TABLE " + SetDB.tableDraftImagenes.TABLE_NAME + "(" +
+                    SetDB.tableImagenes.COL_IDIMAGEN + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    SetDB.tableImagenes.COL_IDPOST + " INTEGER," +
+                    SetDB.tableImagenes.COL_IMAGEN + " TEXT," +
+                    "FOREIGN KEY(" + SetDB.tableImagenes.COL_IDPOST + ") REFERENCES " + SetDB.tableDraftPost.TABLE_NAME + "(" + SetDB.tablePost.COL_IDPOST + "))"
+
+            db?.execSQL(createtableDraftImagenes)
+
 
             Log.e("ENTRO","CREO TABLAS")
 

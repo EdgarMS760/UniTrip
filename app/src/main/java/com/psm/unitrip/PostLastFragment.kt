@@ -41,8 +41,6 @@ class PostLastFragment : Fragment(), OnClickListener {
         val backCreateBtn = root.findViewById<ImageButton>(R.id.backCreateBtn)
         backCreateBtn.setOnClickListener(this)
 
-        val locationBtnGet = root.findViewById<Button>(R.id.locationBtnGet)
-        locationBtnGet.setOnClickListener(this)
 
         priceTxt = root.findViewById<EditText>(R.id.ETPriceCreatePost)
         locationTxt = root.findViewById<EditText>(R.id.ETLocationCreate)
@@ -87,6 +85,7 @@ class PostLastFragment : Fragment(), OnClickListener {
 
             var isValid = true
             val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
+            val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
 
             val locationStr = locationTxt.text.toString()
             val price = priceTxt.text.toString()
@@ -98,7 +97,7 @@ class PostLastFragment : Fragment(), OnClickListener {
                 priceTxt.setBackgroundResource(R.drawable.input_style)
             }
 
-            if(locationStr.isEmpty()){
+            if(!regexDomicilio.matches(locationStr)){
                 isValid = false
                 locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
             }else{
@@ -106,6 +105,8 @@ class PostLastFragment : Fragment(), OnClickListener {
             }
 
             if(isValid){
+                var photos: MutableList<String> = mutableListOf()
+
 
                 findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)
             }else{
@@ -162,18 +163,6 @@ class PostLastFragment : Fragment(), OnClickListener {
                         .setDuration(300)
                 }
             findNavController().navigate(R.id.action_postLastFragment_to_postFragment)
-        }
-
-        if(p0!!.id == R.id.locationBtnGet){
-            p0.animate()
-                .alpha(0.5f)
-                .setDuration(300)
-                .withEndAction {
-                    p0.animate()
-                        .alpha(1f)
-                        .setDuration(300)
-                }
-
         }
 
     }

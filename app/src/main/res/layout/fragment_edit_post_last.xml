@@ -125,31 +125,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ETPriceEditPost" />
 
-        <Button
-            android:id="@+id/shareLocEdit"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="65dp"
-            android:background="@drawable/button_accept"
-            android:text="@string/textLocationBtn"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageViewEdit"
-            app:layout_constraintTop_toBottomOf="@+id/ETPriceEditPost" />
-
         <EditText
             android:id="@+id/ETLocationEdit"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="64dp"
             android:background="@drawable/input_style"
             android:ems="10"
-            android:enabled="false"
             android:hint="@string/locationBtn"
             android:inputType="text"
             android:paddingHorizontal="8sp"
@@ -159,6 +143,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewEdit" />
+
+        <TextView
+            android:id="@+id/txtLocView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="64dp"
+            android:text="@string/textLocationBtn"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewEdit"
+            app:layout_constraintTop_toBottomOf="@+id/ETPriceEditPost" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -62,12 +62,26 @@ class SetDB {
     }
 
 
+    abstract class tableDraftPost{
+        companion object{
+            val TABLE_NAME = "Drafts"
+        }
+    }
+
+
     abstract class tableImagenes{
         companion object{
             val TABLE_NAME = "Imagenes"
             val COL_IDIMAGEN = "idImagen"
             val COL_IDPOST =  "idPost"
             val COL_IMAGEN =  "imagen"
+        }
+    }
+
+
+    abstract class tableDraftImagenes{
+        companion object{
+            val TABLE_NAME = "DraftImages"
         }
     }
 
