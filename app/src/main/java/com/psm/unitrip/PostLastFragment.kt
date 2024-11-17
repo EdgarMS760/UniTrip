@@ -12,7 +12,14 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Models.Post
+import com.psm.unitrip.Models.Usuario
+import com.psm.unitrip.Utilities.ImageUtilities
 import com.psm.unitrip.classes.CreatePostViewModel
+import com.psm.unitrip.classes.RestEngine
+import com.psm.unitrip.classes.SessionManager
+import java.util.Base64
 
 class PostLastFragment : Fragment(), OnClickListener {
     private lateinit var locationTxt: EditText
@@ -127,6 +134,7 @@ class PostLastFragment : Fragment(), OnClickListener {
 
             var isValid = true
             val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
+            val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
 
             val locationStr = locationTxt.text.toString()
             val price = priceTxt.text.toString()
@@ -138,7 +146,7 @@ class PostLastFragment : Fragment(), OnClickListener {
                 priceTxt.setBackgroundResource(R.drawable.input_style)
             }
 
-            if(locationStr.isEmpty()){
+            if(!regexDomicilio.matches(locationStr)){
                 isValid = false
                 locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
             }else{
@@ -146,7 +154,27 @@ class PostLastFragment : Fragment(), OnClickListener {
             }
 
             if(isValid){
-                findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)
+                val listImg64: MutableList<String> = mutableListOf()
+                createPostViewModel.images?.forEach { item ->
+                    val img = ImageUtilities.getByteArrayFromBitmap(item)
+                    val encodedString:String =  Base64.getEncoder().encodeToString(img)
+
+                    val strEncodeImage:String = "data:image/*;base64," + encodedString
+                    listImg64.add(strEncodeImage)
+                }
+                if(SessionManager.getIsLoggedIn()){
+                    val factory = ManagerFactory(RestEngine.getRestEngine())
+                    val postManager = factory.createManager(Post::class.java)
+
+                    postManager?.add(Post(0, createPostViewModel.title.toString(), createPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, "")){success->
+                        if(success){
+                            Toast.makeText(this.requireContext(), "Se añadio el post con exito", Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)
+                        }
+                    }
+
+                }
+
             }else{
                 Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
             }
