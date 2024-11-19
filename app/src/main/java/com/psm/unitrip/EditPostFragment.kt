@@ -1,6 +1,8 @@
 package com.psm.unitrip
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -17,15 +19,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.psm.unitrip.Utilities.ImageUtilities
+import com.psm.unitrip.adapters.ImageAdapter
 import com.psm.unitrip.adapters.ImageUriAdapter
 import com.psm.unitrip.classes.EditPostViewModel
+import java.util.Base64
 
 
 class EditPostFragment : Fragment(), OnClickListener {
     private lateinit var imageView: ViewPager2
     private lateinit var titleTxt: EditText
     private lateinit var descriptionTxt: EditText
-    private val selectedImages = mutableListOf<Uri>()
+    private var selectedImages = mutableListOf<Bitmap>()
     val editPostViewModel: EditPostViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +62,22 @@ class EditPostFragment : Fragment(), OnClickListener {
             descriptionTxt.setText(editPostViewModel.descripcion)
         }
 
-        if(editPostViewModel.images !== null){
-            imageView.adapter = ImageUriAdapter(editPostViewModel.images as MutableList<Uri>)
+        if(editPostViewModel.imagesAnt != null && editPostViewModel.images == null){
+            var listImages: MutableList<Bitmap> = mutableListOf()
+
+            editPostViewModel!!.imagesAnt?.forEach { image ->
+                val strImage:String =  image.replace("data:image/*;base64,","")
+                val byteArray =  Base64.getDecoder().decode(strImage)
+
+                if(byteArray != null){
+                    listImages.add(ImageUtilities.getBitMapFromByteArray(byteArray))
+                }
+            }
+            imageView.adapter = ImageAdapter(listImages)
+        }else{
+            if(editPostViewModel.images != null){
+                imageView.adapter = ImageAdapter(editPostViewModel.images!!.toList())
+            }
         }
 
         return root
@@ -80,20 +99,37 @@ class EditPostFragment : Fragment(), OnClickListener {
                     val clipData = data.clipData
                     if (clipData != null) {
                         for (i in 0 until clipData.itemCount) {
-                            selectedImages.add(clipData.getItemAt(i).uri)
+                            val uri = clipData.getItemAt(i).uri
+                            val bitmap = uriToBitmap(uri)
+                            if (bitmap != null) {
+                                selectedImages.add(bitmap)
+                            }
                         }
                     } else {
                         data.data?.let { uri ->
-                            selectedImages.add(uri)
+                            val bitmap = uriToBitmap(uri)
+                            if (bitmap != null) {
+                                selectedImages.add(bitmap)
+                            }
                         }
                     }
 
                     // Update the ViewPager2 adapter with the selected images
-                    val adapter = ImageUriAdapter(selectedImages)
+                    val adapter = ImageAdapter(selectedImages)
                     imageView.adapter = adapter
                 }
             }
         }
+
+    private fun uriToBitmap(uri: Uri): Bitmap? {
+        return try {
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            BitmapFactory.decodeStream(inputStream)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     override fun onClick(p0: View?) {
         if(p0!!.id == R.id.btnPostEPSig){

@@ -21,7 +21,9 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.psm.unitrip.Manager.ManagerFactory
 import com.psm.unitrip.Manager.UserManager
 import com.psm.unitrip.Models.Usuario
+import com.psm.unitrip.UserApplication.Companion.dbHelper
 import com.psm.unitrip.Utilities.ImageUtilities
+import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
 import java.util.Base64
@@ -113,6 +115,21 @@ class EditProfileFragment : Fragment(), OnClickListener {
             }
         }
 
+    private fun mostrarNoInternet() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        builder.setTitle("Error de Conexion")
+        builder.setMessage("No tienes conexion a internet")
+
+
+        builder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
     override fun onClick(p0: View?) {
         if (p0!!.id == R.id.btnCancelEdit) {
             p0.animate()
@@ -135,59 +152,74 @@ class EditProfileFragment : Fragment(), OnClickListener {
                         .setDuration(300)
                 }
 
-            var isValid = true
+            if(NetworkUtils.isNetworkAvailable(requireContext())){
+                var isValid = true
 
-            var regexPhone = Regex("^(?:\\+52)? ?\\d{10}\$|^(?:\\+52)? ?\\(?\\d{2,3}\\)? ?\\d{3} ?\\d{4}\$")
-            var regexUser = Regex("^[0-9A-Za-zÑñÁáÉéÍíÓóÚú\\s]{2,20}\$")
-            val regexPassword = Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[(!”#\$%&\\/=?¡¿:;,._+*{})]).{8,50}\$")
-
-
-
-            val password = passwordTxt.text.toString()
-            val phone = phoneTxt.text.toString()
-            val username = usernameTxt.text.toString()
+                var regexPhone = Regex("^(?:\\+52)? ?\\d{10}\$|^(?:\\+52)? ?\\(?\\d{2,3}\\)? ?\\d{3} ?\\d{4}\$")
+                var regexUser = Regex("^[0-9A-Za-zÑñÁáÉéÍíÓóÚú\\s]{2,20}\$")
+                val regexPassword = Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[(!”#\$%&\\/=?¡¿:;,._+*{})]).{8,50}\$")
 
 
 
-            if(!regexPassword.matches(password)){
-                isValid = false
-                passwordTxt.setBackgroundResource(R.drawable.input_sytle_error)
-            }else{
-                passwordTxt.setBackgroundResource(R.drawable.input_style)
-            }
-
-            if(!regexPhone.matches(phone)){
-                isValid = false
-                phoneTxt.setBackgroundResource(R.drawable.input_sytle_error)
-            }else{
-                phoneTxt.setBackgroundResource(R.drawable.input_style)
-            }
-
-            if(!regexUser.matches(username)){
-                isValid = false
-                usernameTxt.setBackgroundResource(R.drawable.input_sytle_error)
-            }else{
-                usernameTxt.setBackgroundResource(R.drawable.input_style)
-            }
+                val password = passwordTxt.text.toString()
+                val phone = phoneTxt.text.toString()
+                val username = usernameTxt.text.toString()
 
 
-            if(isValid){
-                val factory = ManagerFactory(RestEngine.getRestEngine())
-                val userManager = factory.createManager(Usuario::class.java)
-                val user = SessionManager.getUsuario()
 
-                if(imageChange){
-                    val imageUri = (profileImageView.drawable as? BitmapDrawable)?.bitmap
+                if(!regexPassword.matches(password)){
+                    isValid = false
+                    passwordTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    passwordTxt.setBackgroundResource(R.drawable.input_style)
+                }
 
-                    if(imageUri !== null){
-                        val profilePfp = ImageUtilities.getByteArrayFromBitmap(imageUri)
-                        val encodedString:String =  Base64.getEncoder().encodeToString(profilePfp)
+                if(!regexPhone.matches(phone)){
+                    isValid = false
+                    phoneTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    phoneTxt.setBackgroundResource(R.drawable.input_style)
+                }
 
-                        val strEncodeImage:String = "data:image/*;base64," + encodedString
+                if(!regexUser.matches(username)){
+                    isValid = false
+                    usernameTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    usernameTxt.setBackgroundResource(R.drawable.input_style)
+                }
 
 
-                        (userManager as? UserManager)?.updatePhoto(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", strEncodeImage)) { success ->
+                if(isValid){
+                    val factory = ManagerFactory(RestEngine.getRestEngine())
+                    val userManager = factory.createManager(Usuario::class.java)
+                    val user = SessionManager.getUsuario()
+
+                    if(imageChange){
+                        val imageUri = (profileImageView.drawable as? BitmapDrawable)?.bitmap
+
+                        if(imageUri !== null){
+                            val profilePfp = ImageUtilities.getByteArrayFromBitmap(imageUri)
+                            val encodedString:String =  Base64.getEncoder().encodeToString(profilePfp)
+
+                            val strEncodeImage:String = "data:image/*;base64," + encodedString
+
+
+                            (userManager as? UserManager)?.updatePhoto(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", strEncodeImage)) { success ->
+                                if(success){
+                                    dbHelper.updateUsuario(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", strEncodeImage))
+                                    SessionManager.saveSession(requireContext())
+                                    Toast.makeText(this.requireContext(), "Se actualizo con exito", Toast.LENGTH_SHORT).show()
+                                    findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                                }else{
+                                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                        }
+                    }else{
+                        userManager?.update(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", "")){success ->
                             if(success){
+                                dbHelper.updateUsuario(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", ""))
                                 SessionManager.saveSession(requireContext())
                                 Toast.makeText(this.requireContext(), "Se actualizo con exito", Toast.LENGTH_SHORT).show()
                                 findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
@@ -198,20 +230,11 @@ class EditProfileFragment : Fragment(), OnClickListener {
 
                     }
                 }else{
-                    userManager?.update(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", "")){success ->
-                        if(success){
-                            Toast.makeText(this.requireContext(), "Se actualizo con exito", Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
-                        }else{
-                            Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
+                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
             }else{
-                Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+                mostrarNoInternet()
             }
-
         }
 
         if (p0!!.id == R.id.uploadImgBtnE) {

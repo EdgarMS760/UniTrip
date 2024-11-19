@@ -25,6 +25,7 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
     val precioView: TextView = view.findViewById(R.id.precioPublicacion)
     val descripcionView: TextView = view.findViewById(R.id.descripcionPublicacion)
     val fechaView: TextView = view.findViewById(R.id.fechaPublicacion)
+    val statusView: TextView = view.findViewById(R.id.status)
     val iconoEdit: ImageView = view.findViewById(R.id.iconoEdit)
     val userPostImg: ImageView = view.findViewById(R.id.userPostImg)
 
@@ -39,6 +40,14 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
                 listImages.add(ImageUtilities.getBitMapFromByteArray(byteArray))
             }
         }
+
+
+        if(PostItemModel.status == "A"){
+            statusView.setText("Activo")
+        }else{
+            statusView.setText("Borrador")
+        }
+
         if(listImages.isNotEmpty()){
             imageView.adapter = ImageAdapter(listImages.toList());
         }

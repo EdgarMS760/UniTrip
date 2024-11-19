@@ -1,7 +1,11 @@
 package com.psm.unitrip.API
 
 import com.psm.unitrip.Requests.CreatePostRequest
+import com.psm.unitrip.Requests.EditarPostRequest
+import com.psm.unitrip.Requests.EliminarPostRequest
 import com.psm.unitrip.Responses.ResponseCrearPost
+import com.psm.unitrip.Responses.ResponseEditarPost
+import com.psm.unitrip.Responses.ResponseEliminarPost
 import com.psm.unitrip.Responses.ResponsePosts
 import com.psm.unitrip.Responses.ResponseSinglePost
 import retrofit2.Call
@@ -18,6 +22,18 @@ interface PostService {
         @Body crearPostBody: CreatePostRequest
     ): Call<ResponseCrearPost>
 
+
+    @Headers("Content-Type: application/json")
+    @POST("posts/update")
+    fun editarPost(
+        @Body editarPostBody: EditarPostRequest
+    ): Call<ResponseEditarPost>
+
+    @Headers("Content-Type: application/json")
+    @POST("posts/delete")
+    fun eliminarPost(
+        @Body eliminarPostBody: EliminarPostRequest
+    ): Call<ResponseEliminarPost>
 
     @GET("posts/getMisPosts/{idUsuario}")
     fun getPostsUsuario(@Path("idUsuario") idUsuario: Int): Call<ResponsePosts>

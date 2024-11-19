@@ -4,8 +4,12 @@ import com.psm.unitrip.API.PostService
 import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.Requests.CreatePostRequest
+import com.psm.unitrip.Requests.EditarPostRequest
+import com.psm.unitrip.Requests.EliminarPostRequest
 import com.psm.unitrip.Responses.ResponseChatActual
 import com.psm.unitrip.Responses.ResponseCrearPost
+import com.psm.unitrip.Responses.ResponseEditarPost
+import com.psm.unitrip.Responses.ResponseEliminarPost
 import com.psm.unitrip.Responses.ResponsePosts
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,8 +48,68 @@ class PostManager(private val api: PostService): Manager<Post> {
         }
     }
 
-    override fun delete(id: Int) {
+    override fun delete(id: Int, callback: (Boolean)-> Unit) {
+        try {
+            val response: Call<ResponseEliminarPost> = api.eliminarPost(EliminarPostRequest(id))
 
+            response.enqueue(object: Callback<ResponseEliminarPost> {
+                override fun onFailure(call: Call<ResponseEliminarPost>, t: Throwable) {
+                    callback(false)
+                }
+
+                override fun onResponse(call: Call<ResponseEliminarPost>, response: Response<ResponseEliminarPost>) {
+                    if(response.isSuccessful){
+                        val body = response.body()
+                        if(body !== null){
+                            if(body.success){
+                                callback(true)
+                            }else{
+                                callback(false)
+                            }
+                        }else{
+                            callback(false)
+                        }
+                    }else{
+                        callback(false)
+                    }
+                }
+            })
+
+        } catch (e: Exception) {
+            println("Error añadiendo post: ${e.message}")
+        }
+    }
+
+    override fun update(item: Post, callback: (Boolean) -> Unit) {
+        try {
+            val response: Call<ResponseEditarPost> = api.editarPost(EditarPostRequest(item.title, item.description, item.precio, item.status, item.location, item.idPost, item.arrayImagenes))
+
+            response.enqueue(object: Callback<ResponseEditarPost> {
+                override fun onFailure(call: Call<ResponseEditarPost>, t: Throwable) {
+                    callback(false)
+                }
+
+                override fun onResponse(call: Call<ResponseEditarPost>, response: Response<ResponseEditarPost>) {
+                    if(response.isSuccessful){
+                        val body = response.body()
+                        if(body !== null){
+                            if(body.success){
+                                callback(true)
+                            }else{
+                                callback(false)
+                            }
+                        }else{
+                            callback(false)
+                        }
+                    }else{
+                        callback(false)
+                    }
+                }
+            })
+
+        } catch (e: Exception) {
+            println("Error añadiendo post: ${e.message}")
+        }
     }
 
     override fun getAll(id: Int, callback: (List<Post>?) -> Unit){

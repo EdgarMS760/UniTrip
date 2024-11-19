@@ -6,7 +6,7 @@ interface Manager<T> {
     fun update(item: T, callback: (Boolean)-> Unit){
         return
     }
-    fun delete(id: Int){
+    fun delete(id: Int, callback: (Boolean)-> Unit){
         return
     }
     fun getAll(id: Int, callback: (List<T>?) -> Unit){

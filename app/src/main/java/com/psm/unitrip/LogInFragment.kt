@@ -13,6 +13,8 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.classes.SessionManager
 
 
@@ -55,6 +57,23 @@ class LogInFragment : Fragment(), OnClickListener {
         return root
     }
 
+
+    private fun mostrarNoInternet() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        builder.setTitle("Error de Conexion")
+        builder.setMessage("No tienes conexion a internet")
+
+
+        builder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
     override fun onClick(p0: View?) {
         when (p0!!.id) {
             R.id.backLogInBtn -> {
@@ -70,19 +89,22 @@ class LogInFragment : Fragment(), OnClickListener {
                             .alpha(1f)
                             .setDuration(300)
                     }
+                if(NetworkUtils.isNetworkAvailable(requireContext())){
+                    val email = emailTxt.text.toString()
+                    val password = passTxt.text.toString()
 
-                val email = emailTxt.text.toString()
-                val password = passTxt.text.toString()
-
-                SessionManager.logIn(email, password, requireContext()){ success ->
-                    if(success){
-                        println("hOLA")
-                        val intent =  Intent(requireContext(), MainActivity::class.java)
-                        startActivity(intent)
-                    }else{
-                        Toast.makeText(activity?.applicationContext,"Fallo de Credenciales", Toast.LENGTH_LONG).show()
+                    SessionManager.logIn(email, password, requireContext()){ success ->
+                        if(success){
+                            val intent =  Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                        }else{
+                            Toast.makeText(activity?.applicationContext,"Fallo de Credenciales", Toast.LENGTH_LONG).show()
+                        }
                     }
+                }else{
+                    mostrarNoInternet()
                 }
+
             }
 
             R.id.signUpViewLI -> {

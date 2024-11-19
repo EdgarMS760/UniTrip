@@ -1,5 +1,6 @@
 package com.psm.unitrip.Manager
 
+import android.util.Log
 import com.psm.unitrip.API.ChatService
 import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.Models.Mensaje
@@ -10,6 +11,7 @@ import com.psm.unitrip.Responses.ResponseChats
 import com.psm.unitrip.Responses.ResponseCreateChat
 import com.psm.unitrip.Responses.ResponseSendMsg
 import com.psm.unitrip.Responses.ResponseUpdate
+import com.psm.unitrip.UserApplication.Companion.dbHelper
 import com.psm.unitrip.classes.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -60,6 +62,9 @@ class ChatManager(private val api: ChatService): Manager<Chat> {
                         val body = response.body()
                         if(body !== null){
                             if(body.success){
+                                if(body.msg != "E"){
+                                    dbHelper.insertChats(Chat(0, item.idEmisor, item.idReceptor, "", "", "", "", "", ""))
+                                }
                                 callback(body.data.chatInfo)
                             }else{
                                 callback(null)

@@ -12,10 +12,13 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.psm.unitrip.Manager.ManagerFactory
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.Models.Usuario
+import com.psm.unitrip.UserApplication.Companion.dbHelper
 import com.psm.unitrip.Utilities.ImageUtilities
+import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.classes.CreatePostViewModel
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
@@ -55,6 +58,21 @@ class PostLastFragment : Fragment(), OnClickListener {
         return root
     }
 
+    private fun mostrarNoInternet() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        builder.setTitle("Error de Conexion")
+        builder.setMessage("No tienes conexion a internet")
+
+
+        builder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
     override fun onClick(p0: View?) {
         if(p0!!.id == R.id.searchBtnDir){
             p0.animate()
@@ -90,47 +108,6 @@ class PostLastFragment : Fragment(), OnClickListener {
                         .setDuration(300)
                 }
 
-            var isValid = true
-            val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
-            val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
-
-            val locationStr = locationTxt.text.toString()
-            val price = priceTxt.text.toString()
-
-            if(!regexPrice.matches(price)){
-                isValid = false
-                priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
-            }else{
-                priceTxt.setBackgroundResource(R.drawable.input_style)
-            }
-
-            if(!regexDomicilio.matches(locationStr)){
-                isValid = false
-                locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
-            }else{
-                locationTxt.setBackgroundResource(R.drawable.input_style)
-            }
-
-            if(isValid){
-                var photos: MutableList<String> = mutableListOf()
-
-
-                findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)
-            }else{
-                Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-
-        if(p0!!.id == R.id.btnPostC){
-            p0.animate()
-                .alpha(0.5f)
-                .setDuration(300)
-                .withEndAction {
-                    p0.animate()
-                        .alpha(1f)
-                        .setDuration(300)
-                }
 
             var isValid = true
             val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
@@ -163,20 +140,77 @@ class PostLastFragment : Fragment(), OnClickListener {
                     listImg64.add(strEncodeImage)
                 }
                 if(SessionManager.getIsLoggedIn()){
-                    val factory = ManagerFactory(RestEngine.getRestEngine())
-                    val postManager = factory.createManager(Post::class.java)
-
-                    postManager?.add(Post(0, createPostViewModel.title.toString(), createPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, "")){success->
-                        if(success){
-                            Toast.makeText(this.requireContext(), "Se añadio el post con exito", Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)
-                        }
-                    }
-
+                    dbHelper.insertDraft(Post(0, createPostViewModel.title.toString(), createPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, ""))
+                    Toast.makeText(this.requireContext(), "Se guardo el draft con exito", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)
                 }
 
             }else{
                 Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+        if(p0!!.id == R.id.btnPostC){
+            p0.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    p0.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
+
+            if(NetworkUtils.isNetworkAvailable(requireContext())){
+                var isValid = true
+                val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
+                val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
+
+                val locationStr = locationTxt.text.toString()
+                val price = priceTxt.text.toString()
+
+                if(!regexPrice.matches(price)){
+                    isValid = false
+                    priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    priceTxt.setBackgroundResource(R.drawable.input_style)
+                }
+
+                if(!regexDomicilio.matches(locationStr)){
+                    isValid = false
+                    locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                }else{
+                    locationTxt.setBackgroundResource(R.drawable.input_style)
+                }
+
+                if(isValid){
+                    val listImg64: MutableList<String> = mutableListOf()
+                    createPostViewModel.images?.forEach { item ->
+                        val img = ImageUtilities.getByteArrayFromBitmap(item)
+                        val encodedString:String =  Base64.getEncoder().encodeToString(img)
+
+                        val strEncodeImage:String = "data:image/*;base64," + encodedString
+                        listImg64.add(strEncodeImage)
+                    }
+                    if(SessionManager.getIsLoggedIn()){
+                        val factory = ManagerFactory(RestEngine.getRestEngine())
+                        val postManager = factory.createManager(Post::class.java)
+
+                        postManager!!.add(Post(0, createPostViewModel.title.toString(), createPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, "")){success->
+                            if(success){
+                                dbHelper.insertPost(Post(0, createPostViewModel.title.toString(), createPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, ""))
+                                Toast.makeText(this.requireContext(), "Se añadio el post con exito", Toast.LENGTH_SHORT).show()
+                                findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)
+                            }
+                        }
+
+                    }
+
+                }else{
+                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                mostrarNoInternet()
             }
 
         }

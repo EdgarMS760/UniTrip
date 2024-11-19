@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.psm.unitrip.Manager.ManagerFactory
 import com.psm.unitrip.Models.Chat
+import com.psm.unitrip.UserApplication.Companion.dbHelper
+import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.adapters.ChatItemAdapter
 import com.psm.unitrip.classes.ChatViewModel
 import com.psm.unitrip.classes.CreatePostViewModel
@@ -43,9 +45,7 @@ class ChatsFragment : Fragment(), OnClickListener {
 
         loadIcon.visibility = View.VISIBLE
 
-        val factory = ManagerFactory(RestEngine.getRestEngine())
 
-        val chatManager = factory.createManager(Chat::class.java)
 
         val chatAdapter = ChatItemAdapter(emptyList()) { Chat ->
             chatVM.chatAct = Chat
@@ -56,15 +56,30 @@ class ChatsFragment : Fragment(), OnClickListener {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = chatAdapter
 
-        if(SessionManager.getUsuario() != null){
-            val user = SessionManager.getUsuario()
-            chatManager?.getAll(user!!.idUsuario){chats->
-                loadIcon.visibility = View.GONE
-                if(chats != null){
-                    chatAdapter.updateChats(chats)
+
+        if(NetworkUtils.isNetworkAvailable(requireContext())){
+            val factory = ManagerFactory(RestEngine.getRestEngine())
+
+            val chatManager = factory.createManager(Chat::class.java)
+
+            if(SessionManager.getUsuario() != null){
+                val user = SessionManager.getUsuario()
+                chatManager?.getAll(user!!.idUsuario){chats->
+                    loadIcon.visibility = View.GONE
+                    if(chats != null){
+                        chatAdapter.updateChats(chats)
+                    }
                 }
             }
+
+        }else{
+            val user = SessionManager.getUsuario()
+            val listaChats: List<Chat> = dbHelper.selectChats(user!!.idUsuario)
+            chatAdapter.updateChats(listaChats)
+            loadIcon.visibility = View.GONE
         }
+
+
 
         val searchBtn = root.findViewById<ImageButton>(R.id.searchBtnDir)
         searchBtn.setOnClickListener(this)

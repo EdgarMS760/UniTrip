@@ -24,7 +24,9 @@ import com.psm.unitrip.Manager.PostManager
 import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.Models.Usuario
+import com.psm.unitrip.UserApplication.Companion.dbHelper
 import com.psm.unitrip.Utilities.ImageUtilities
+import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.adapters.PostItemAdapter
 import com.psm.unitrip.classes.CreatePostViewModel
 import com.psm.unitrip.classes.EditPostViewModel
@@ -79,7 +81,14 @@ class ProfileFragment : Fragment(), OnClickListener {
         btnEPfp.setOnClickListener(this)
         btnLogOut.setOnClickListener(this)
 
-        val postAdapter = PostItemAdapter(emptyList()) { postItem ->
+        val postAdapter = PostItemAdapter(mutableListOf()) { postItem ->
+            editPostViewModel.idPost = postItem.idPost
+            editPostViewModel.title = postItem.title
+            editPostViewModel.descripcion = postItem.description
+            editPostViewModel.location = postItem.location
+            editPostViewModel.price = postItem.precio
+            editPostViewModel.status = postItem.status
+            editPostViewModel.imagesAnt = postItem.arrayImagenes
             findNavController().navigate(R.id.action_profileFragment_to_editPostFragment)
         }
 
@@ -88,20 +97,33 @@ class ProfileFragment : Fragment(), OnClickListener {
         recyclerView.adapter = postAdapter
 
 
-        val factory = ManagerFactory(RestEngine.getRestEngine())
 
-        val postManager = factory.createManager(Post::class.java)
+        if(NetworkUtils.isNetworkAvailable(requireContext())){
+            val factory = ManagerFactory(RestEngine.getRestEngine())
 
-        if(SessionManager.getUsuario() != null){
-            val user = SessionManager.getUsuario()
-            (postManager as? PostManager)?.getMyPosts(user!!.idUsuario){posts->
-                loadIcon.visibility = View.GONE
-                if(posts != null){
-                    postAdapter.updatePosts(posts)
+            val postManager = factory.createManager(Post::class.java)
+
+            if(SessionManager.getUsuario() != null){
+                val user = SessionManager.getUsuario()
+                (postManager as? PostManager)?.getMyPosts(user!!.idUsuario){posts->
+                    loadIcon.visibility = View.GONE
+                    if(posts != null){
+                        postAdapter.updatePosts(posts)
+
+                    }
+                    val postsDrafts: MutableList<Post> = dbHelper.selectMisPosts(user!!.idUsuario)
+                    postAdapter.addPosts(postsDrafts)
                 }
             }
-        }
+        }else{
 
+            val posts: MutableList<Post> = dbHelper.selectMyPosts(user!!.idUsuario)
+            postAdapter.updatePosts(posts)
+
+            val postsDrafts: MutableList<Post> = dbHelper.selectMisPosts(user!!.idUsuario)
+            postAdapter.addPosts(postsDrafts)
+            loadIcon.visibility = View.GONE
+        }
 
         editPostViewModel.reset()
         createPostViewModel.reset()

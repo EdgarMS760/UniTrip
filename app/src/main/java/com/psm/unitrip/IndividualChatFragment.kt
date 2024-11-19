@@ -15,12 +15,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.psm.unitrip.Manager.ChatManager
 import com.psm.unitrip.Manager.ManagerFactory
 import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.Models.Mensaje
+import com.psm.unitrip.Models.Usuario
 import com.psm.unitrip.Utilities.ImageUtilities
+import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.adapters.MessageItemAdapter
 import com.psm.unitrip.classes.ChatViewModel
 import com.psm.unitrip.classes.RestEngine
@@ -38,6 +41,21 @@ class IndividualChatFragment : Fragment(), OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
+
+    private fun mostrarNoInternet() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        builder.setTitle("Error de Conexion")
+        builder.setMessage("No tienes conexion a internet")
+
+
+        builder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
     override fun onCreateView(
@@ -62,17 +80,28 @@ class IndividualChatFragment : Fragment(), OnClickListener {
         recycler.adapter = adapterMsg
 
 
-        val factory = ManagerFactory(RestEngine.getRestEngine())
 
-        val chatManager = factory.createManager(Chat::class.java)
 
-        (chatManager as? ChatManager)?.getMessages(chatVM.chatAct!!.idChat) { Mensajes ->
-            if(Mensajes != null){
-                loadIcon.visibility = View.GONE
-                adapterMsg.updateMensajes(Mensajes)
-                recycler.scrollToPosition(recycler.adapter?.itemCount?.minus(1) ?: 0)
+
+        if(NetworkUtils.isNetworkAvailable(requireContext())){
+            val factory = ManagerFactory(RestEngine.getRestEngine())
+
+            val chatManager = factory.createManager(Chat::class.java)
+
+            (chatManager as? ChatManager)?.getMessages(chatVM.chatAct!!.idChat) { Mensajes ->
+                if(Mensajes != null){
+                    loadIcon.visibility = View.GONE
+                    adapterMsg.updateMensajes(Mensajes)
+                    recycler.scrollToPosition(recycler.adapter?.itemCount?.minus(1) ?: 0)
+                }
             }
+        }else{
+            val Mensajes: List<Mensaje> = UserApplication.dbHelper.selectMessages(chatVM.chatAct!!.idChat)
+            adapterMsg.updateMensajes(Mensajes)
+            recycler.scrollToPosition(recycler.adapter?.itemCount?.minus(1) ?: 0)
+            loadIcon.visibility = View.GONE
         }
+
 
         val nameUser = root.findViewById<TextView>(R.id.nameUserChat)
         val userImg = root.findViewById<ImageView>(R.id.LogIconContainer)
@@ -134,34 +163,42 @@ class IndividualChatFragment : Fragment(), OnClickListener {
                         .alpha(1f)
                         .setDuration(300)
                 }
-            var isValid = true
 
-            val msg = messageTxt.text.toString()
 
-            if(msg.isEmpty()){
-                isValid = false
-            }
+            if(NetworkUtils.isNetworkAvailable(requireContext())){
+                var isValid = true
 
-            if(isValid){
-                messageTxt.setText("")
+                val msg = messageTxt.text.toString()
 
-                val factory = ManagerFactory(RestEngine.getRestEngine())
-
-                val chatManager = factory.createManager(Chat::class.java)
-
-                (chatManager as? ChatManager)?.sendMsg(SessionManager.getUsuario()!!.idUsuario, chatVM.chatAct!!.idChat, msg) { success ->
-                    if(success){
-                        val now = LocalDateTime.now()
-                        val formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy")
-                        val formattedDate = now.format(formatter)
-                        adapterMsg.addMsg(Mensaje(SessionManager.getUsuario()!!.idUsuario, msg, chatVM.chatAct!!.idChat, formattedDate.toString()))
-                        recycler.scrollToPosition(recycler.adapter?.itemCount?.minus(1) ?: 0)
-                    }
+                if(msg.isEmpty()){
+                    isValid = false
                 }
 
+                if(isValid){
+                    messageTxt.setText("")
 
+                    val factory = ManagerFactory(RestEngine.getRestEngine())
+
+                    val chatManager = factory.createManager(Chat::class.java)
+
+                    (chatManager as? ChatManager)?.sendMsg(SessionManager.getUsuario()!!.idUsuario, chatVM.chatAct!!.idChat, msg) { success ->
+                        if(success){
+                            val now = LocalDateTime.now()
+                            val formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy")
+                            val formattedDate = now.format(formatter)
+                            UserApplication.dbHelper.insertMensaje(Mensaje(SessionManager.getUsuario()!!.idUsuario, msg, chatVM.chatAct!!.idChat, formattedDate))
+
+                            adapterMsg.addMsg(Mensaje(SessionManager.getUsuario()!!.idUsuario, msg, chatVM.chatAct!!.idChat, formattedDate.toString()))
+                            recycler.scrollToPosition(recycler.adapter?.itemCount?.minus(1) ?: 0)
+                        }
+                    }
+
+
+                }else{
+                    Toast.makeText(this.requireContext(), "No ingresaste ningun mensaje", Toast.LENGTH_SHORT).show()
+                }
             }else{
-                Toast.makeText(this.requireContext(), "No ingresaste ningun mensaje", Toast.LENGTH_SHORT).show()
+                mostrarNoInternet()
             }
         }
     }

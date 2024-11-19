@@ -14,11 +14,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.psm.unitrip.Manager.ChatManager
 import com.psm.unitrip.Manager.ManagerFactory
 import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.Models.Post
+import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.adapters.PostItemAdapter
 import com.psm.unitrip.classes.ChatViewModel
 import com.psm.unitrip.classes.CreatePostViewModel
@@ -39,6 +41,22 @@ class SearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
     }
+
+    private fun mostrarNoInternet() {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        builder.setTitle("Error de Conexion")
+        builder.setMessage("No tienes conexion a internet")
+
+
+        builder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,18 +95,23 @@ class SearchFragment : Fragment() {
         filterSpinner.adapter = adapterF
 
 
-        val postAdapter = PostItemAdapter(emptyList()) { postItem ->
-            val factoryChat = ManagerFactory(RestEngine.getRestEngine())
+        val postAdapter = PostItemAdapter(mutableListOf()) { postItem ->
 
-            val chatManager = factoryChat.createManager(Chat::class.java)
+            if(NetworkUtils.isNetworkAvailable(requireContext())){
+                val factoryChat = ManagerFactory(RestEngine.getRestEngine())
 
-            if(chatManager != null){
-                (chatManager as? ChatManager)?.createChatPost(Chat(0, SessionManager.getUsuario()!!.idUsuario, postItem.idUsuario, "", "", "", "", "", "")){ chat ->
-                    if(chat != null){
-                        chatVM.chatAct = chat
-                        findNavController().navigate(R.id.action_searchFragment_to_individualChatFragment)
+                val chatManager = factoryChat.createManager(Chat::class.java)
+
+                if(chatManager != null){
+                    (chatManager as? ChatManager)?.createChatPost(Chat(0, SessionManager.getUsuario()!!.idUsuario, postItem.idUsuario, "", "", "", "", "", "")){ chat ->
+                        if(chat != null){
+                            chatVM.chatAct = chat
+                            findNavController().navigate(R.id.action_searchFragment_to_individualChatFragment)
+                        }
                     }
                 }
+            }else{
+                mostrarNoInternet()
             }
         }
 
@@ -97,20 +120,27 @@ class SearchFragment : Fragment() {
         recyclerView.adapter = postAdapter
 
 
-        val factory = ManagerFactory(RestEngine.getRestEngine())
 
-        val postManager = factory.createManager(Post::class.java)
 
-        if(SessionManager.getUsuario() != null){
-            val user = SessionManager.getUsuario()
-            postManager?.getAll(user!!.idUsuario){posts->
-                loadIcon.visibility = View.GONE
-                if(posts != null){
-                    postAdapter.updatePosts(posts)
+        if(NetworkUtils.isNetworkAvailable(requireContext())){
+            val factory = ManagerFactory(RestEngine.getRestEngine())
+
+            val postManager = factory.createManager(Post::class.java)
+
+            if(SessionManager.getUsuario() != null){
+                val user = SessionManager.getUsuario()
+                postManager?.getAll(user!!.idUsuario){posts->
+                    loadIcon.visibility = View.GONE
+                    if(posts != null){
+                        postAdapter.updatePosts(posts)
+                    }
                 }
             }
+        }else{
+            val posts: MutableList<Post> = UserApplication.dbHelper.selectPosts(SessionManager.getUsuario()!!.idUsuario)
+            postAdapter.updatePosts(posts)
+            loadIcon.visibility = View.GONE
         }
-
 
         editPostViewModel.reset()
         createPostViewModel.reset()

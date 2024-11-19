@@ -8,6 +8,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.classes.SessionManager
 import com.psm.unitrip.databinding.ActivityWelcomeBinding
 
@@ -21,7 +22,10 @@ class WelcomeActivity: AppCompatActivity(), OnFragmentWelcomeActionsListener {
         if(SessionManager.getIsLoggedIn()){
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
+
+
 
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)

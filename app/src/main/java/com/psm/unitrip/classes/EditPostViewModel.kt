@@ -9,8 +9,9 @@ class EditPostViewModel: ViewModel() {
     var descripcion: String? = null
     var location: String? = null
     var price: String? = null
-    var images: MutableList<Uri>? = null
-    var imagesAnt: List<Bitmap>? = null
+    var status: String? = null
+    var images: MutableList<Bitmap>? = null
+    var imagesAnt: List<String>? = null
     var idPost: Int? = null
 
     fun reset(){

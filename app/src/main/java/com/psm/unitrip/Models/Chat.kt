@@ -1,7 +1,5 @@
 package com.psm.unitrip.Models
 
-import android.graphics.Bitmap
-
 data class Chat(
     val idChat: Int,
     val idEmisor: Int,
