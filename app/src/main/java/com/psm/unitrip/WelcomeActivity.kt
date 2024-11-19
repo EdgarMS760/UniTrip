@@ -19,12 +19,7 @@ class WelcomeActivity: AppCompatActivity(), OnFragmentWelcomeActionsListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        if(PreferenceManager.hasLastSync(this)){
-            Toast.makeText(this,"Se tiene fecha", Toast.LENGTH_LONG).show()
 
-        }else{
-            Toast.makeText(this,"No se tiene fecha", Toast.LENGTH_LONG).show()
-        }
         SessionManager.loadSession(this)
         if(SessionManager.getIsLoggedIn()){
 

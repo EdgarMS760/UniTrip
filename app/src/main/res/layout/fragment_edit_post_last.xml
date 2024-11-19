@@ -192,7 +192,7 @@
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_cancel"
-            android:text="@string/cancelBtnE"
+            android:text="@string/deleteBtnE"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />

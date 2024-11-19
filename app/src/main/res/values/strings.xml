@@ -30,6 +30,7 @@
     <string name="usernameViewPfp">Gustavo Isai Gomez Alvarez Gustavo Isai Gomez Alvarez</string>
     <string name="saveBtnE">Save</string>
     <string name="cancelBtnE">Cancel</string>
+    <string name="deleteBtnE">Delete</string>
     <string name="nameChat">Gustavo Isai Gomez Alvarez</string>
     <string name="messageHintTxt">Message</string>
     <string name="locationBtn">Calle,Num,Col,Municipio,Estado</string>

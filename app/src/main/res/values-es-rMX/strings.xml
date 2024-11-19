@@ -28,6 +28,7 @@
     <string name="uploadBtn">Subir</string>
     <string name="fullNameViewPfp">Nombre Completo</string>
     <string name="usernameViewPfp">@Usuario</string>
+    <string name="deleteBtnE">Eliminar</string>
     <string name="saveBtnE">Guardar</string>
     <string name="cancelBtnE">Cancelar</string>
     }<string name="nameChat">Gustavo Isai Gomez Alvarez</string>

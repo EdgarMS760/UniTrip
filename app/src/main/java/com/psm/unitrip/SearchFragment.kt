@@ -72,11 +72,9 @@ class SearchFragment : Fragment() {
 
         loadIcon.visibility = View.VISIBLE
 
-        val filterSpinner = root.findViewById<Spinner>(R.id.filterSpinner)
         val orderSpinner = root.findViewById<Spinner>(R.id.orderSpinner)
 
-        val filterOptions = listOf("Filtrar Por", "Año 2024", "Por Año 2024")
-        val orderOptions = listOf("Ordenar Por", "Por Año", "Por ID" , "Por Usuario")
+        val orderOptions = listOf("Ordenar Por", "Por Precio", "Por ID" , "Por Usuario")
 
         val adapter = ArrayAdapter(
             requireContext(),
@@ -87,17 +85,6 @@ class SearchFragment : Fragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         orderSpinner.adapter = adapter
-
-        val adapterF = ArrayAdapter(
-            requireContext(),
-            R.layout.spinner_item,
-            filterOptions
-        )
-
-        adapterF.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        filterSpinner.adapter = adapterF
-
 
         val postAdapter = PostItemAdapter(mutableListOf()) { postItem ->
 
