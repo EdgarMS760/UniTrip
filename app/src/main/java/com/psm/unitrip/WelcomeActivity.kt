@@ -2,12 +2,14 @@ package com.psm.unitrip
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.classes.SessionManager
 import com.psm.unitrip.databinding.ActivityWelcomeBinding
@@ -17,9 +19,16 @@ class WelcomeActivity: AppCompatActivity(), OnFragmentWelcomeActionsListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if(PreferenceManager.hasLastSync(this)){
+            Toast.makeText(this,"Se tiene fecha", Toast.LENGTH_LONG).show()
 
+        }else{
+            Toast.makeText(this,"No se tiene fecha", Toast.LENGTH_LONG).show()
+        }
         SessionManager.loadSession(this)
         if(SessionManager.getIsLoggedIn()){
+
+
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

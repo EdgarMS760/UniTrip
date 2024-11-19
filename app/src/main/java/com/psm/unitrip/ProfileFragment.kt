@@ -21,6 +21,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.psm.unitrip.Manager.ManagerFactory
 import com.psm.unitrip.Manager.PostManager
+import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.Models.Usuario
@@ -34,7 +35,11 @@ import com.psm.unitrip.classes.PostItem
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
 import com.psm.unitrip.providers.PostITemProvider
+import java.text.SimpleDateFormat
 import java.util.Base64
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class ProfileFragment : Fragment(), OnClickListener {
     val createPostViewModel: CreatePostViewModel by activityViewModels()
@@ -135,7 +140,6 @@ class ProfileFragment : Fragment(), OnClickListener {
 
         if(p0!!.id == R.id.logOutBtn){
             SessionManager.logOut(requireContext())
-
             val intent =  Intent(requireContext(), WelcomeActivity::class.java)
             startActivity(intent)
         }

@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.Models.Usuario
 import com.psm.unitrip.UserApplication.Companion.dbHelper
@@ -22,7 +23,11 @@ import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.classes.CreatePostViewModel
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
+import java.text.SimpleDateFormat
 import java.util.Base64
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class PostLastFragment : Fragment(), OnClickListener {
     private lateinit var locationTxt: EditText
@@ -198,6 +203,12 @@ class PostLastFragment : Fragment(), OnClickListener {
 
                         postManager!!.add(Post(0, createPostViewModel.title.toString(), createPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, "")){success->
                             if(success){
+                                val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                    timeZone = TimeZone.getTimeZone("UTC")
+                                }
+                                val currentDate = utcFormat.format(Date())
+
+                                PreferenceManager.setLastSync(requireContext(), currentDate)
                                 dbHelper.insertPost(Post(0, createPostViewModel.title.toString(), createPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, ""))
                                 Toast.makeText(this.requireContext(), "Se añadio el post con exito", Toast.LENGTH_SHORT).show()
                                 findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)

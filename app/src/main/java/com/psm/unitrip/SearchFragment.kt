@@ -18,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.psm.unitrip.Manager.ChatManager
 import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.Utilities.NetworkUtils
@@ -28,7 +29,10 @@ import com.psm.unitrip.classes.EditPostViewModel
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
 import com.psm.unitrip.providers.PostITemProvider
-
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 class SearchFragment : Fragment() {
@@ -105,6 +109,12 @@ class SearchFragment : Fragment() {
                 if(chatManager != null){
                     (chatManager as? ChatManager)?.createChatPost(Chat(0, SessionManager.getUsuario()!!.idUsuario, postItem.idUsuario, "", "", "", "", "", "")){ chat ->
                         if(chat != null){
+                            val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                timeZone = TimeZone.getTimeZone("UTC")
+                            }
+                            val currentDate = utcFormat.format(Date())
+
+                            PreferenceManager.setLastSync(requireContext(), currentDate)
                             chatVM.chatAct = chat
                             findNavController().navigate(R.id.action_searchFragment_to_individualChatFragment)
                         }

@@ -18,6 +18,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.PreferenceManager
+import com.psm.unitrip.Manager.UserManager
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.Models.Usuario
 import com.psm.unitrip.UserApplication.Companion.dbHelper
@@ -26,7 +28,11 @@ import com.psm.unitrip.classes.RegistroViewModel
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
 import java.util.Base64
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class SignUpLast : Fragment(), OnClickListener {
     private var listener: OnFragmentWelcomeActionsListener? = null
@@ -176,11 +182,59 @@ class SignUpLast : Fragment(), OnClickListener {
                         if(userManager !== null){
                             userManager.add(Usuario(0, registroViewModel.email.toString(), registroViewModel.password.toString(), registroViewModel.nombre.toString(), registroViewModel.apellido.toString(), username, phone, address, strEncodeImage)){success ->
                                 if(success){
-                                    Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
                                     SessionManager.saveSession(requireContext())
-                                    dbHelper.insertUsuario(Usuario(0, registroViewModel.email.toString(), registroViewModel.password.toString(), registroViewModel.nombre.toString(), registroViewModel.apellido.toString(), username, phone, address, strEncodeImage))
-                                    val intent =  Intent(requireContext(), MainActivity::class.java)
-                                    startActivity(intent)
+
+                                    if(PreferenceManager.hasLastSync(requireContext())){
+
+                                        val fechaSync = PreferenceManager.getLastSync(requireContext())
+                                        (userManager as? UserManager)?.sync(fechaSync.toString()) { state ->
+                                            if(state){
+                                                (userManager as? UserManager)?.syncUpdated(fechaSync.toString()) { synced ->
+                                                    val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                                        timeZone = TimeZone.getTimeZone("UTC")
+                                                    }
+                                                    val currentDate = utcFormat.format(Date())
+
+                                                    PreferenceManager.setLastSync(requireContext(), currentDate)
+                                                    Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
+                                                    val intent =  Intent(requireContext(), MainActivity::class.java).apply {
+                                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                    }
+                                                    startActivity(intent)
+                                                }
+                                            }else{
+                                                Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
+                                                val intent =  Intent(requireContext(), MainActivity::class.java).apply {
+                                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                }
+                                                startActivity(intent)
+                                            }
+                                        }
+
+                                    }else{
+                                        (userManager as? UserManager)?.sync("1970-01-01 00:00:00") { state ->
+                                            if(state){
+                                                val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                                    timeZone = TimeZone.getTimeZone("UTC")
+                                                }
+                                                val currentDate = utcFormat.format(Date())
+
+                                                PreferenceManager.setLastSync(requireContext(), currentDate)
+
+                                                Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
+                                                val intent =  Intent(requireContext(), MainActivity::class.java).apply {
+                                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                }
+                                                startActivity(intent)
+                                            }else{
+                                                Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
+                                                val intent =  Intent(requireContext(), MainActivity::class.java).apply {
+                                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                }
+                                                startActivity(intent)
+                                            }
+                                        }
+                                    }
                                 }else{
                                     mostrarAlerta()
                                 }

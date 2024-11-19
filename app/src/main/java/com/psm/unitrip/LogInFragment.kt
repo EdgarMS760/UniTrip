@@ -14,8 +14,17 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.PreferenceManager
+import com.psm.unitrip.Manager.UserManager
+import com.psm.unitrip.Models.Usuario
 import com.psm.unitrip.Utilities.NetworkUtils
+import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 class LogInFragment : Fragment(), OnClickListener {
@@ -95,8 +104,55 @@ class LogInFragment : Fragment(), OnClickListener {
 
                     SessionManager.logIn(email, password, requireContext()){ success ->
                         if(success){
-                            val intent =  Intent(requireContext(), MainActivity::class.java)
-                            startActivity(intent)
+                            val factory = ManagerFactory(RestEngine.getRestEngine())
+                            val userManager = factory.createManager(Usuario::class.java)
+
+                            if(PreferenceManager.hasLastSync(requireContext())){
+
+                                val fechaSync = PreferenceManager.getLastSync(requireContext())
+                                (userManager as? UserManager)?.sync(fechaSync.toString()) { state ->
+                                    if(state){
+                                        (userManager as? UserManager)?.syncUpdated(fechaSync.toString()) { synced ->
+                                            val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                                timeZone = TimeZone.getTimeZone("UTC")
+                                            }
+                                            val currentDate = utcFormat.format(Date())
+
+                                            PreferenceManager.setLastSync(requireContext(), currentDate)
+                                            val intent =  Intent(requireContext(), MainActivity::class.java).apply {
+                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            }
+                                            startActivity(intent)
+                                        }
+                                    }else{
+                                        val intent =  Intent(requireContext(), MainActivity::class.java).apply {
+                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        }
+                                        startActivity(intent)
+                                    }
+                                }
+
+                            }else{
+                                (userManager as? UserManager)?.sync("1970-01-01 00:00:00") { state ->
+                                    if(state){
+                                        val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                            timeZone = TimeZone.getTimeZone("UTC")
+                                        }
+                                        val currentDate = utcFormat.format(Date())
+
+                                        PreferenceManager.setLastSync(requireContext(), currentDate)
+                                        val intent =  Intent(requireContext(), MainActivity::class.java).apply {
+                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        }
+                                        startActivity(intent)
+                                    }else{
+                                        val intent =  Intent(requireContext(), MainActivity::class.java).apply {
+                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        }
+                                        startActivity(intent)
+                                    }
+                                }
+                            }
                         }else{
                             Toast.makeText(activity?.applicationContext,"Fallo de Credenciales", Toast.LENGTH_LONG).show()
                         }

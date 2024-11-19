@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.imageview.ShapeableImageView
 import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Manager.UserManager
 import com.psm.unitrip.Models.Usuario
 import com.psm.unitrip.UserApplication.Companion.dbHelper
@@ -26,7 +27,11 @@ import com.psm.unitrip.Utilities.ImageUtilities
 import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
+import java.text.SimpleDateFormat
 import java.util.Base64
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class EditProfileFragment : Fragment(), OnClickListener {
     private lateinit var profileImageView: ShapeableImageView
@@ -208,6 +213,12 @@ class EditProfileFragment : Fragment(), OnClickListener {
                                 if(success){
                                     dbHelper.updateUsuario(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", strEncodeImage))
                                     SessionManager.saveSession(requireContext())
+                                    val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                        timeZone = TimeZone.getTimeZone("UTC")
+                                    }
+                                    val currentDate = utcFormat.format(Date())
+
+                                    PreferenceManager.setLastSync(requireContext(), currentDate)
                                     Toast.makeText(this.requireContext(), "Se actualizo con exito", Toast.LENGTH_SHORT).show()
                                     findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
                                 }else{
@@ -221,6 +232,12 @@ class EditProfileFragment : Fragment(), OnClickListener {
                             if(success){
                                 dbHelper.updateUsuario(Usuario(user!!.idUsuario, user.email, password, "", "", username, phone, "", ""))
                                 SessionManager.saveSession(requireContext())
+                                val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                    timeZone = TimeZone.getTimeZone("UTC")
+                                }
+                                val currentDate = utcFormat.format(Date())
+
+                                PreferenceManager.setLastSync(requireContext(), currentDate)
                                 Toast.makeText(this.requireContext(), "Se actualizo con exito", Toast.LENGTH_SHORT).show()
                                 findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
                             }else{

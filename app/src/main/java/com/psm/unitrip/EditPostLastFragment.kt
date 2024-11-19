@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.UserApplication.Companion.dbHelper
 import com.psm.unitrip.Utilities.ImageUtilities
@@ -22,7 +23,11 @@ import com.psm.unitrip.Utilities.NetworkUtils
 import com.psm.unitrip.classes.EditPostViewModel
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
+import java.text.SimpleDateFormat
 import java.util.Base64
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class EditPostLastFragment : Fragment(), OnClickListener {
     val editPostViewModel: EditPostViewModel by activityViewModels()
@@ -83,6 +88,12 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                     postManager!!.delete(editPostViewModel.idPost!!.toInt()){ success->
                         if(success){
                             dbHelper.deletePost(editPostViewModel.idPost!!.toInt())
+                            val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                timeZone = TimeZone.getTimeZone("UTC")
+                            }
+                            val currentDate = utcFormat.format(Date())
+
+                            PreferenceManager.setLastSync(requireContext(), currentDate)
                             dialog.dismiss()
                             Toast.makeText(this.requireContext(), "Se elimino con exito", Toast.LENGTH_SHORT).show()
                             findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
@@ -261,6 +272,12 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                             postManager!!.update(Post(editPostViewModel.idPost!!.toInt(), editPostViewModel.title.toString(), editPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, "")){ success->
                                 if(success){
                                     dbHelper.updatePost(Post(editPostViewModel.idPost!!.toInt(), editPostViewModel.title.toString(), editPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, ""))
+                                    val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                        timeZone = TimeZone.getTimeZone("UTC")
+                                    }
+                                    val currentDate = utcFormat.format(Date())
+
+                                    PreferenceManager.setLastSync(requireContext(), currentDate)
                                     Toast.makeText(this.requireContext(), "Se actualizo el post con exito", Toast.LENGTH_SHORT).show()
                                     findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
                                 }
@@ -294,6 +311,12 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                                 if(success){
                                     dbHelper.deleteDraft(editPostViewModel.idPost!!.toInt())
                                     dbHelper.insertPost(Post(0, editPostViewModel.title.toString(), editPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, ""))
+                                    val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                        timeZone = TimeZone.getTimeZone("UTC")
+                                    }
+                                    val currentDate = utcFormat.format(Date())
+
+                                    PreferenceManager.setLastSync(requireContext(), currentDate)
                                     Toast.makeText(this.requireContext(), "Se actualizo el post con exito", Toast.LENGTH_SHORT).show()
                                     findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
                                 }

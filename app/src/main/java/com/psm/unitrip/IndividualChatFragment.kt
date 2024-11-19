@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.psm.unitrip.Manager.ChatManager
 import com.psm.unitrip.Manager.ManagerFactory
+import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Models.Chat
 import com.psm.unitrip.Models.Mensaje
 import com.psm.unitrip.Models.Usuario
@@ -29,9 +30,13 @@ import com.psm.unitrip.classes.ChatViewModel
 import com.psm.unitrip.classes.RestEngine
 import com.psm.unitrip.classes.SessionManager
 import com.psm.unitrip.providers.MessageItemProvider
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Base64
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class IndividualChatFragment : Fragment(), OnClickListener {
     private lateinit var messageTxt: EditText
@@ -187,7 +192,12 @@ class IndividualChatFragment : Fragment(), OnClickListener {
                             val formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy")
                             val formattedDate = now.format(formatter)
                             UserApplication.dbHelper.insertMensaje(Mensaje(SessionManager.getUsuario()!!.idUsuario, msg, chatVM.chatAct!!.idChat, formattedDate))
+                            val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                timeZone = TimeZone.getTimeZone("UTC")
+                            }
+                            val currentDate = utcFormat.format(Date())
 
+                            PreferenceManager.setLastSync(requireContext(), currentDate)
                             adapterMsg.addMsg(Mensaje(SessionManager.getUsuario()!!.idUsuario, msg, chatVM.chatAct!!.idChat, formattedDate.toString()))
                             recycler.scrollToPosition(recycler.adapter?.itemCount?.minus(1) ?: 0)
                         }
