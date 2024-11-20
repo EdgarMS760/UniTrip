@@ -39,7 +39,7 @@ class SearchFragment : Fragment() {
     val createPostViewModel: CreatePostViewModel by activityViewModels()
     val editPostViewModel: EditPostViewModel by activityViewModels()
     val chatVM: ChatViewModel by activityViewModels()
-
+    private var lastClickTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,29 +87,34 @@ class SearchFragment : Fragment() {
         orderSpinner.adapter = adapter
 
         val postAdapter = PostItemAdapter(mutableListOf()) { postItem ->
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime > 500) {
+                lastClickTime = currentTime
 
-            if(NetworkUtils.isNetworkAvailable(requireContext())){
-                val factoryChat = ManagerFactory(RestEngine.getRestEngine())
+                if(NetworkUtils.isNetworkAvailable(requireContext())){
+                    val factoryChat = ManagerFactory(RestEngine.getRestEngine())
 
-                val chatManager = factoryChat.createManager(Chat::class.java)
+                    val chatManager = factoryChat.createManager(Chat::class.java)
 
-                if(chatManager != null){
-                    (chatManager as? ChatManager)?.createChatPost(Chat(0, SessionManager.getUsuario()!!.idUsuario, postItem.idUsuario, "", "", "", "", "", "")){ chat ->
-                        if(chat != null){
-                            val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
-                                timeZone = TimeZone.getTimeZone("UTC")
+                    if(chatManager != null){
+                        (chatManager as? ChatManager)?.createChatPost(Chat(0, SessionManager.getUsuario()!!.idUsuario, postItem.idUsuario, "", "", "", "", "", "")){ chat ->
+                            if(chat != null){
+                                val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                    timeZone = TimeZone.getTimeZone("UTC")
+                                }
+                                val currentDate = utcFormat.format(Date())
+
+                                PreferenceManager.setLastSync(requireContext(), currentDate)
+                                chatVM.chatAct = chat
+                                findNavController().navigate(R.id.action_searchFragment_to_individualChatFragment)
                             }
-                            val currentDate = utcFormat.format(Date())
-
-                            PreferenceManager.setLastSync(requireContext(), currentDate)
-                            chatVM.chatAct = chat
-                            findNavController().navigate(R.id.action_searchFragment_to_individualChatFragment)
                         }
                     }
+                }else{
+                    mostrarNoInternet()
                 }
-            }else{
-                mostrarNoInternet()
             }
+
         }
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerListSearch)

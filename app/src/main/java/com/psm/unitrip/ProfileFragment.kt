@@ -44,6 +44,8 @@ import java.util.TimeZone
 class ProfileFragment : Fragment(), OnClickListener {
     val createPostViewModel: CreatePostViewModel by activityViewModels()
     val editPostViewModel: EditPostViewModel by activityViewModels()
+    private var lastClickTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -87,14 +89,19 @@ class ProfileFragment : Fragment(), OnClickListener {
         btnLogOut.setOnClickListener(this)
 
         val postAdapter = PostItemAdapter(mutableListOf()) { postItem ->
-            editPostViewModel.idPost = postItem.idPost
-            editPostViewModel.title = postItem.title
-            editPostViewModel.descripcion = postItem.description
-            editPostViewModel.location = postItem.location
-            editPostViewModel.price = postItem.precio
-            editPostViewModel.status = postItem.status
-            editPostViewModel.imagesAnt = postItem.arrayImagenes
-            findNavController().navigate(R.id.action_profileFragment_to_editPostFragment)
+
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime > 500) {
+                lastClickTime = currentTime
+                editPostViewModel.idPost = postItem.idPost
+                editPostViewModel.title = postItem.title
+                editPostViewModel.descripcion = postItem.description
+                editPostViewModel.location = postItem.location
+                editPostViewModel.price = postItem.precio
+                editPostViewModel.status = postItem.status
+                editPostViewModel.imagesAnt = postItem.arrayImagenes
+                findNavController().navigate(R.id.action_profileFragment_to_editPostFragment)
+            }
         }
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.RecyclerPostListProfile)
@@ -139,12 +146,28 @@ class ProfileFragment : Fragment(), OnClickListener {
     override fun onClick(p0: View?) {
 
         if(p0!!.id == R.id.logOutBtn){
+            p0.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    p0.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
             SessionManager.logOut(requireContext())
             val intent =  Intent(requireContext(), WelcomeActivity::class.java)
             startActivity(intent)
         }
 
         if(p0!!.id == R.id.editPfpBtn){
+            p0.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    p0.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
             findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
         }
 

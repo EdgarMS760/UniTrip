@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.psm.unitrip.Manager.ManagerFactory
 import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Manager.UserManager
@@ -31,6 +32,7 @@ class LogInFragment : Fragment(), OnClickListener {
     private var listener: OnFragmentWelcomeActionsListener? = null
     private lateinit var emailTxt: EditText
     private lateinit var passTxt: EditText
+    private lateinit var loadIcon: CircularProgressIndicator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +62,8 @@ class LogInFragment : Fragment(), OnClickListener {
         val signUpViewLI = root.findViewById<TextView>(R.id.signUpViewLI)
         signUpViewLI.setOnClickListener(this)
 
+        loadIcon = root.findViewById<CircularProgressIndicator>(R.id.loadSyncIndicator)
+
         emailTxt = root.findViewById<EditText>(R.id.emailTxt)
         passTxt = root.findViewById<EditText>(R.id.passTxt)
 
@@ -86,6 +90,14 @@ class LogInFragment : Fragment(), OnClickListener {
     override fun onClick(p0: View?) {
         when (p0!!.id) {
             R.id.backLogInBtn -> {
+                p0.animate()
+                    .alpha(0.5f)
+                    .setDuration(300)
+                    .withEndAction {
+                        p0.animate()
+                            .alpha(1f)
+                            .setDuration(300)
+                    }
                 this.listener?.moveNextPage(1)
             }
 
@@ -101,7 +113,7 @@ class LogInFragment : Fragment(), OnClickListener {
                 if(NetworkUtils.isNetworkAvailable(requireContext())){
                     val email = emailTxt.text.toString()
                     val password = passTxt.text.toString()
-
+                    loadIcon.visibility = View.VISIBLE
                     SessionManager.logIn(email, password, requireContext()){ success ->
                         if(success){
                             val factory = ManagerFactory(RestEngine.getRestEngine())
@@ -117,6 +129,7 @@ class LogInFragment : Fragment(), OnClickListener {
                                                 timeZone = TimeZone.getTimeZone("UTC")
                                             }
                                             val currentDate = utcFormat.format(Date())
+                                            loadIcon.visibility = View.GONE
 
                                             PreferenceManager.setLastSync(requireContext(), currentDate)
                                             val intent =  Intent(requireContext(), MainActivity::class.java).apply {
@@ -125,6 +138,8 @@ class LogInFragment : Fragment(), OnClickListener {
                                             startActivity(intent)
                                         }
                                     }else{
+                                        loadIcon.visibility = View.GONE
+
                                         val intent =  Intent(requireContext(), MainActivity::class.java).apply {
                                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                         }
@@ -139,6 +154,7 @@ class LogInFragment : Fragment(), OnClickListener {
                                             timeZone = TimeZone.getTimeZone("UTC")
                                         }
                                         val currentDate = utcFormat.format(Date())
+                                        loadIcon.visibility = View.GONE
 
                                         PreferenceManager.setLastSync(requireContext(), currentDate)
                                         val intent =  Intent(requireContext(), MainActivity::class.java).apply {
@@ -146,6 +162,7 @@ class LogInFragment : Fragment(), OnClickListener {
                                         }
                                         startActivity(intent)
                                     }else{
+                                        loadIcon.visibility = View.GONE
                                         val intent =  Intent(requireContext(), MainActivity::class.java).apply {
                                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                         }

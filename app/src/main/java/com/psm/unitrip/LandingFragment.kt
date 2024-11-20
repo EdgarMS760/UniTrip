@@ -39,7 +39,7 @@ class LandingFragment : Fragment(), OnClickListener {
     val createPostViewModel: CreatePostViewModel by activityViewModels()
     val editPostViewModel: EditPostViewModel by activityViewModels()
     val chatVM: ChatViewModel by activityViewModels()
-
+    private var lastClickTime = 0L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val db = UserApplication.dbHelper.writableDatabase
@@ -79,27 +79,36 @@ class LandingFragment : Fragment(), OnClickListener {
 
 
         val postAdapter = PostItemAdapter(mutableListOf()) { postItem ->
-            if(NetworkUtils.isNetworkAvailable(requireContext())){
-                val factoryChat = ManagerFactory(RestEngine.getRestEngine())
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime > 500) {
+                lastClickTime = currentTime
 
-                val chatManager = factoryChat.createManager(Chat::class.java)
+                if (NetworkUtils.isNetworkAvailable(requireContext())) {
+                    val factoryChat = ManagerFactory(RestEngine.getRestEngine())
+                    val chatManager = factoryChat.createManager(Chat::class.java)
 
-                if(chatManager != null){
-                    (chatManager as? ChatManager)?.createChatPost(Chat(0, SessionManager.getUsuario()!!.idUsuario, postItem.idUsuario, "", "", "", "", "", "")){ chat ->
-                        if(chat != null){
-                            val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
-                                timeZone = TimeZone.getTimeZone("UTC")
+                    if (chatManager != null) {
+                        (chatManager as? ChatManager)?.createChatPost(
+                            Chat(0, SessionManager.getUsuario()!!.idUsuario, postItem.idUsuario, "", "", "", "", "", "")
+                        ) { chat ->
+                            if (chat != null) {
+                                val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                                    timeZone = TimeZone.getTimeZone("UTC")
+                                }
+                                val currentDate = utcFormat.format(Date())
+
+                                PreferenceManager.setLastSync(requireContext(), currentDate)
+                                chatVM.chatAct = chat
+
+                                if (findNavController().currentDestination?.id == R.id.landingFragment) {
+                                    findNavController().navigate(R.id.action_landingFragment_to_individualChatFragment)
+                                }
                             }
-                            val currentDate = utcFormat.format(Date())
-
-                            PreferenceManager.setLastSync(requireContext(), currentDate)
-                            chatVM.chatAct = chat
-                            findNavController().navigate(R.id.action_landingFragment_to_individualChatFragment)
                         }
                     }
+                } else {
+                    mostrarNoInternet()
                 }
-            }else{
-                mostrarNoInternet()
             }
 
         }
@@ -135,6 +144,14 @@ class LandingFragment : Fragment(), OnClickListener {
 
     override fun onClick(p0: View?) {
         if(p0!!.id == R.id.searchBtnDir){
+            p0.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    p0.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
             findNavController().navigate(R.id.action_landingFragment_self)
         }
     }

@@ -72,7 +72,14 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 
         iconoEdit.setOnClickListener {
-
+            iconoEdit.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    iconoEdit.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
             onClick(PostItemModel)
         }
     }

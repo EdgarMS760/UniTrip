@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.psm.unitrip.Manager.ManagerFactory
 import com.psm.unitrip.Manager.PreferenceManager
 import com.psm.unitrip.Manager.UserManager
@@ -39,6 +40,7 @@ class SignUpLast : Fragment(), OnClickListener {
     private lateinit var usernameTxt: EditText
     private lateinit var phoneTxt: EditText
     private lateinit var direccionTxt: EditText
+    private lateinit var loadIcon: CircularProgressIndicator
     val registroViewModel: RegistroViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +69,10 @@ class SignUpLast : Fragment(), OnClickListener {
         backLastBtn.setOnClickListener(this)
         val registerBtn =  root.findViewById<Button>(R.id.registerBtn)
         registerBtn.setOnClickListener(this)
+        loadIcon = root.findViewById<CircularProgressIndicator>(R.id.loadSyncIndicator2)
+
+
+
 
         usernameTxt = root.findViewById<EditText>(R.id.usernameTxtSU)
         phoneTxt = root.findViewById<EditText>(R.id.phoneTxt)
@@ -171,6 +177,7 @@ class SignUpLast : Fragment(), OnClickListener {
                     }
 
                     if(isValid){
+                        loadIcon.visibility = View.VISIBLE
                         val factory = ManagerFactory(RestEngine.getRestEngine())
                         val userManager = factory.createManager(Usuario::class.java)
 
@@ -194,7 +201,7 @@ class SignUpLast : Fragment(), OnClickListener {
                                                         timeZone = TimeZone.getTimeZone("UTC")
                                                     }
                                                     val currentDate = utcFormat.format(Date())
-
+                                                    loadIcon.visibility = View.GONE
                                                     PreferenceManager.setLastSync(requireContext(), currentDate)
                                                     Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
                                                     val intent =  Intent(requireContext(), MainActivity::class.java).apply {
@@ -203,6 +210,7 @@ class SignUpLast : Fragment(), OnClickListener {
                                                     startActivity(intent)
                                                 }
                                             }else{
+                                                loadIcon.visibility = View.GONE
                                                 Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
                                                 val intent =  Intent(requireContext(), MainActivity::class.java).apply {
                                                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -220,7 +228,7 @@ class SignUpLast : Fragment(), OnClickListener {
                                                 val currentDate = utcFormat.format(Date())
 
                                                 PreferenceManager.setLastSync(requireContext(), currentDate)
-
+                                                loadIcon.visibility = View.GONE
                                                 Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
                                                 val intent =  Intent(requireContext(), MainActivity::class.java).apply {
                                                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -228,6 +236,7 @@ class SignUpLast : Fragment(), OnClickListener {
                                                 startActivity(intent)
                                             }else{
                                                 Toast.makeText(requireContext(),"Se registro correctamente", Toast.LENGTH_LONG).show()
+                                                loadIcon.visibility = View.GONE
                                                 val intent =  Intent(requireContext(), MainActivity::class.java).apply {
                                                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                                 }

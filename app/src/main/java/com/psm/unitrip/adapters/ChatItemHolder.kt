@@ -44,6 +44,14 @@ class ChatItemHolder(view: View): RecyclerView.ViewHolder(view) {
         }
 
         itemView.setOnClickListener {
+            itemView.animate()
+                .alpha(0.5f)
+                .setDuration(300)
+                .withEndAction {
+                    itemView.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                }
             onClick(chatItemModel)
         }
     }
