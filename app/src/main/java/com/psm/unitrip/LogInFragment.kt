@@ -172,6 +172,7 @@ class LogInFragment : Fragment(), OnClickListener {
                             }
                         }else{
                             Toast.makeText(activity?.applicationContext,"Fallo de Credenciales", Toast.LENGTH_LONG).show()
+                            loadIcon.visibility = View.GONE
                         }
                     }
                 }else{
