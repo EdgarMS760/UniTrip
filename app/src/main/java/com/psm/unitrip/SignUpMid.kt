@@ -98,22 +98,29 @@ class SignUpMid : Fragment(), OnClickListener {
                 if(!regexPassword.matches(password)){
                     isValid = false
                     passwordTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    passwordTxt.error= "Contraseña erronea, necesita una letra minuscula, mayuscula, un numero y un signo"
                 }else{
                     passwordTxt.setBackgroundResource(R.drawable.input_style)
+                    passwordTxt.error= null
                 }
 
                 if(!regexName.matches(firstName)){
                     isValid = false
                     firstNameTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    firstNameTxt.error="Nombre Invalido"
                 }else{
                     firstNameTxt.setBackgroundResource(R.drawable.input_style)
+                    firstNameTxt.error= null
                 }
 
                 if(!regexName.matches(lastName)){
                     isValid = false
                     lastNameTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    lastNameTxt.error="Apellido Invalido"
                 }else{
                     lastNameTxt.setBackgroundResource(R.drawable.input_style)
+                    lastNameTxt.error=null
+
                 }
 
                 if(isValid){
@@ -121,8 +128,6 @@ class SignUpMid : Fragment(), OnClickListener {
                     registroViewModel.nombre = firstName
                     registroViewModel.apellido = lastName
                     this.listener?.moveNextPage(5)
-                }else{
-                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
 
 

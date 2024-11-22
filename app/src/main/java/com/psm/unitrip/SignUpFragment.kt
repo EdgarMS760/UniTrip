@@ -112,21 +112,22 @@ class SignUpFragment : Fragment(), OnClickListener {
 
                 if(imageUri == null){
                     isValid = false
+                    Toast.makeText(this.requireContext(), "Agrega una imagen", Toast.LENGTH_SHORT).show()
                 }
 
                 if(!regex.matches(email)){
                     isValid = false
                     emailTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    emailTxt.error = "Formate de Email Invalido"
                 }else{
                     emailTxt.setBackgroundResource(R.drawable.input_style)
+                    emailTxt.error = null
                 }
 
                 if(isValid){
                     registroViewModel.email = email
                     registroViewModel.photoUri = imageUri
                     this.listener?.moveNextPage(4)
-                }else{
-                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
 
             }
