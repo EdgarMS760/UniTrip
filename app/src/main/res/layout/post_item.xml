@@ -34,7 +34,24 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Título de la publicación -->
-
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabIndicator"
+            android:layout_width="0dp"
+            android:layout_height="5.5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/bg_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imagePublicacion"
+            app:tabBackground="@color/bg_input"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/bg_primary"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="4dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/white" />
 
         <TextView
             android:id="@+id/descripcionPublicacion"
@@ -151,7 +168,7 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imagePublicacion">
+            app:layout_constraintTop_toBottomOf="@+id/tabIndicator">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/userPostImg"

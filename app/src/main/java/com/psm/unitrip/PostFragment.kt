@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.psm.unitrip.adapters.ImageAdapter
 import com.psm.unitrip.adapters.ImageUriAdapter
 import com.psm.unitrip.classes.CreatePostViewModel
@@ -26,6 +28,7 @@ import com.psm.unitrip.classes.CreatePostViewModel
 class PostFragment : Fragment(), OnClickListener {
     private lateinit var imageView: ViewPager2
     private lateinit var titleTxt: EditText
+    private lateinit var tabIndicator: TabLayout
     private lateinit var descriptionTxt: EditText
     private var selectedImages = mutableListOf<Bitmap>()
     val createPostViewModel: CreatePostViewModel by activityViewModels()
@@ -43,6 +46,9 @@ class PostFragment : Fragment(), OnClickListener {
         val root = inflater.inflate(R.layout.fragment_post, container, false)
         val searchBtnDir = root.findViewById<ImageButton>(R.id.searchBtnDir)
         searchBtnDir.setOnClickListener(this)
+
+        tabIndicator = root.findViewById<TabLayout>(R.id.tabIndicator)
+
         val btnPostSig = root.findViewById<Button>(R.id.btnPostSig)
         btnPostSig.setOnClickListener(this)
         val btnSubirFoto = root.findViewById<Button>(R.id.btnSubirFoto)
@@ -51,6 +57,9 @@ class PostFragment : Fragment(), OnClickListener {
         titleTxt = root.findViewById<EditText>(R.id.usernameTxtSU)
         descriptionTxt = root.findViewById<EditText>(R.id.DescriptionCreate)
         imageView = root.findViewById<ViewPager2>(R.id.imgIcono)
+
+
+
 
         if(createPostViewModel.title !== null){
             titleTxt.setText(createPostViewModel.title)
@@ -63,6 +72,7 @@ class PostFragment : Fragment(), OnClickListener {
         if(createPostViewModel.images !== null){
             selectedImages = (createPostViewModel.images as MutableList<Bitmap>)
             imageView.adapter = ImageAdapter(createPostViewModel.images as MutableList<Bitmap>)
+            TabLayoutMediator(tabIndicator, imageView) { _, _ -> }.attach()
         }
 
         return root
@@ -80,29 +90,35 @@ class PostFragment : Fragment(), OnClickListener {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 selectedImages.clear()
-                result.data?.let { data ->
-                    val clipData = data.clipData
-                    if (clipData != null) {
-                        for (i in 0 until clipData.itemCount) {
-                            val uri = clipData.getItemAt(i).uri
-                            val bitmap = uriToBitmap(uri)
-                            if (bitmap != null) {
-                                selectedImages.add(bitmap)
+                try{
+                    result.data?.let { data ->
+                        val clipData = data.clipData
+                        if (clipData != null) {
+                            for (i in 0 until clipData.itemCount) {
+                                val uri = clipData.getItemAt(i).uri
+                                val bitmap = uriToBitmap(uri)
+                                if (bitmap != null) {
+                                    selectedImages.add(bitmap)
+                                }
+                            }
+                        } else {
+                            data.data?.let { uri ->
+                                val bitmap = uriToBitmap(uri)
+                                if (bitmap != null) {
+                                    selectedImages.add(bitmap)
+                                }
                             }
                         }
-                    } else {
-                        data.data?.let { uri ->
-                            val bitmap = uriToBitmap(uri)
-                            if (bitmap != null) {
-                                selectedImages.add(bitmap)
-                            }
-                        }
-                    }
 
-                    // Update the ViewPager2 adapter with the selected images
-                    val adapter = ImageAdapter(selectedImages)
-                    imageView.adapter = adapter
+                        val adapter = ImageAdapter(selectedImages)
+                        imageView.adapter = adapter
+                        TabLayoutMediator(tabIndicator, imageView) { _, _ -> }.attach()
+                    }
+                }catch (e: Exception){
+                    Toast.makeText(requireContext(), "Ocurrió un error al seleccionar imágenes", Toast.LENGTH_SHORT).show()
                 }
+
+
             }
         }
 
