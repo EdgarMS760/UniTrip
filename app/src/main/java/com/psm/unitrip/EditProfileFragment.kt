@@ -175,6 +175,7 @@ class EditProfileFragment : Fragment(), OnClickListener {
                 if(!regexPassword.matches(password)){
                     isValid = false
                     passwordTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    passwordTxt.error= "Contraseña erronea, necesita una letra minuscula, mayuscula, un numero y un signo"
                 }else{
                     passwordTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -182,6 +183,7 @@ class EditProfileFragment : Fragment(), OnClickListener {
                 if(!regexPhone.matches(phone)){
                     isValid = false
                     phoneTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    phoneTxt.error="Telefono Invalido"
                 }else{
                     phoneTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -189,6 +191,7 @@ class EditProfileFragment : Fragment(), OnClickListener {
                 if(!regexUser.matches(username)){
                     isValid = false
                     usernameTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    usernameTxt.error="Caracteres Invalidos en el Usuario"
                 }else{
                     usernameTxt.setBackgroundResource(R.drawable.input_style)
                 }

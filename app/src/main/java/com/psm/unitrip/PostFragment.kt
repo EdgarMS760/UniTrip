@@ -149,11 +149,13 @@ class PostFragment : Fragment(), OnClickListener {
 
             if(selectedImages.isEmpty()){
                 isValid = false
+                Toast.makeText(this.requireContext(), "No seleccionaste imagenes", Toast.LENGTH_SHORT).show()
             }
 
             if(title.isEmpty()){
                 titleTxt.setBackgroundResource(R.drawable.input_sytle_error)
                 isValid = false
+                titleTxt.error="No puede estar vacio el titulo"
             }else{
                 titleTxt.setBackgroundResource(R.drawable.input_style)
             }
@@ -161,6 +163,7 @@ class PostFragment : Fragment(), OnClickListener {
             if(descripcion.isEmpty()){
                 descriptionTxt.setBackgroundResource(R.drawable.input_sytle_error)
                 isValid = false
+                descriptionTxt.error="No puede estar vacio el descripcion"
             }else{
                 descriptionTxt.setBackgroundResource(R.drawable.input_style)
             }
@@ -171,8 +174,6 @@ class PostFragment : Fragment(), OnClickListener {
                 createPostViewModel.images = selectedImages
 
                 findNavController().navigate(R.id.action_postFragment_to_postLastFragment)
-            }else{
-                Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
             }
 
         }

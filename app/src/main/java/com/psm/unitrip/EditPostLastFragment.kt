@@ -185,6 +185,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                 if(!regexPrice.matches(price)){
                     isValid = false
                     priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    priceTxt.error = "Precio con caracteres invalidos"
                 }else{
                     priceTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -192,6 +193,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                 if(!regexDomicilio.matches(locationStr)){
                     isValid = false
                     locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    locationTxt.error = "Direccion con formato Invalido"
                 }else{
                     locationTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -211,8 +213,6 @@ class EditPostLastFragment : Fragment(), OnClickListener {
 
                     dbHelper.updateDraft(Post(editPostViewModel.idPost!!.toInt(), editPostViewModel.title.toString(), editPostViewModel.descripcion.toString(), price, "D", locationStr, 0, "", "", listImg64, ""))
                     findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
-                }else{
-                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -239,6 +239,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                 if(!regexPrice.matches(price)){
                     isValid = false
                     priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    priceTxt.error = "Precio con caracteres invalidos"
                 }else{
                     priceTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -246,6 +247,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                 if(!regexDomicilio.matches(locationStr)){
                     isValid = false
                     locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    locationTxt.error = "Direccion con formato Invalido"
                 }else{
                     locationTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -324,8 +326,6 @@ class EditPostLastFragment : Fragment(), OnClickListener {
 
                         }
                     }
-                }else{
-                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
             }else{
                 mostrarNoInternet()

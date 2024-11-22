@@ -161,6 +161,7 @@ class EditPostFragment : Fragment(), OnClickListener {
             if(title.isEmpty()){
                 titleTxt.setBackgroundResource(R.drawable.input_sytle_error)
                 isValid = false
+                titleTxt.error="No puede estar vacio el titulo"
             }else{
                 titleTxt.setBackgroundResource(R.drawable.input_style)
             }
@@ -168,6 +169,7 @@ class EditPostFragment : Fragment(), OnClickListener {
             if(descripcion.isEmpty()){
                 descriptionTxt.setBackgroundResource(R.drawable.input_sytle_error)
                 isValid = false
+                descriptionTxt.error="No puede estar vacio el descripcion"
             }else{
                 descriptionTxt.setBackgroundResource(R.drawable.input_style)
             }

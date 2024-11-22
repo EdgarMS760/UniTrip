@@ -124,6 +124,7 @@ class PostLastFragment : Fragment(), OnClickListener {
             if(!regexPrice.matches(price)){
                 isValid = false
                 priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                priceTxt.error = "Precio con caracteres invalidos"
             }else{
                 priceTxt.setBackgroundResource(R.drawable.input_style)
             }
@@ -131,6 +132,7 @@ class PostLastFragment : Fragment(), OnClickListener {
             if(!regexDomicilio.matches(locationStr)){
                 isValid = false
                 locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                locationTxt.error = "Direccion con formato Invalido"
             }else{
                 locationTxt.setBackgroundResource(R.drawable.input_style)
             }
@@ -150,8 +152,6 @@ class PostLastFragment : Fragment(), OnClickListener {
                     findNavController().navigate(R.id.action_postLastFragment_to_profileFragment)
                 }
 
-            }else{
-                Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -177,6 +177,7 @@ class PostLastFragment : Fragment(), OnClickListener {
                 if(!regexPrice.matches(price)){
                     isValid = false
                     priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    priceTxt.error = "Precio con caracteres invalidos"
                 }else{
                     priceTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -184,6 +185,7 @@ class PostLastFragment : Fragment(), OnClickListener {
                 if(!regexDomicilio.matches(locationStr)){
                     isValid = false
                     locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    locationTxt.error = "Direccion con formato Invalido"
                 }else{
                     locationTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -217,8 +219,6 @@ class PostLastFragment : Fragment(), OnClickListener {
 
                     }
 
-                }else{
-                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
             }else{
                 mostrarNoInternet()
