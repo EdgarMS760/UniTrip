@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.psm.unitrip.Models.Post
 import com.psm.unitrip.R
 import com.psm.unitrip.Utilities.ImageUtilities
@@ -28,6 +30,7 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
     val statusView: TextView = view.findViewById(R.id.status)
     val iconoEdit: ImageView = view.findViewById(R.id.iconoEdit)
     val userPostImg: ImageView = view.findViewById(R.id.userPostImg)
+    val tabIndicator: TabLayout = view.findViewById(R.id.tabIndicator)
 
     fun render(PostItemModel: Post, onClick: (Post) -> Unit){
         var listImages: MutableList<Bitmap> = mutableListOf()
@@ -50,6 +53,8 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         if(listImages.isNotEmpty()){
             imageView.adapter = ImageAdapter(listImages.toList());
+            TabLayoutMediator(tabIndicator, imageView) { _, _ -> }.attach()
+
         }
         usernameView.text = PostItemModel.username
         ubicacionView.text = PostItemModel.location

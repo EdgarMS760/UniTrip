@@ -11,8 +11,8 @@
     <string name="firstNameHint">Enter your first name</string>
     <string name="lastNameHint">Enter your last name</string>
     <string name="userHint">Enter your username</string>
-    <string name="addressHint">Enter your address</string>
-    <string name="phoneHint">Enter your phone</string>
+    <string name="addressHint">Enter your address (Optional)</string>
+    <string name="phoneHint">Enter your phone (Optional)</string>
     <string name="emailView">Email:</string>
     <string name="passwordView">Password:</string>
     <string name="firstNameView">First Name:</string>
@@ -26,8 +26,8 @@
     <string name="logTxtLay">Already have an account?</string>
     <string name="logLinkLay">Log In</string>
     <string name="uploadBtn">Upload</string>
-    <string name="fullNameViewPfp">Gustavo Isai Gomez Alvarez Gustavo Isai Gomez Alvarez</string>
-    <string name="usernameViewPfp">Gustavo Isai Gomez Alvarez Gustavo Isai Gomez Alvarez</string>
+    <string name="fullNameViewPfp">Gustavo Isai Gomez Alvarez</string>
+    <string name="usernameViewPfp">Gigakai</string>
     <string name="saveBtnE">Save</string>
     <string name="cancelBtnE">Cancel</string>
     <string name="deleteBtnE">Delete</string>

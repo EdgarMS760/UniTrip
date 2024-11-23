@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.psm.unitrip.Utilities.ImageUtilities
 import com.psm.unitrip.adapters.ImageAdapter
 import com.psm.unitrip.adapters.ImageUriAdapter
@@ -29,6 +31,7 @@ import java.util.Base64
 class EditPostFragment : Fragment(), OnClickListener {
     private lateinit var imageView: ViewPager2
     private lateinit var titleTxt: EditText
+    private lateinit var tabIndicator: TabLayout
     private lateinit var descriptionTxt: EditText
     private var selectedImages = mutableListOf<Bitmap>()
     val editPostViewModel: EditPostViewModel by activityViewModels()
@@ -53,6 +56,7 @@ class EditPostFragment : Fragment(), OnClickListener {
         imageView = root.findViewById<ViewPager2>(R.id.imgIconoEdit)
         titleTxt = root.findViewById<EditText>(R.id.TitleEdit)
         descriptionTxt = root.findViewById<EditText>(R.id.DescriptionEdit)
+        tabIndicator = root.findViewById<TabLayout>(R.id.tabIndicator)
 
         if(editPostViewModel.title !== null){
             titleTxt.setText(editPostViewModel.title)
@@ -74,9 +78,11 @@ class EditPostFragment : Fragment(), OnClickListener {
                 }
             }
             imageView.adapter = ImageAdapter(listImages)
+            TabLayoutMediator(tabIndicator, imageView) { _, _ -> }.attach()
         }else{
             if(editPostViewModel.images != null){
                 imageView.adapter = ImageAdapter(editPostViewModel.images!!.toList())
+                TabLayoutMediator(tabIndicator, imageView) { _, _ -> }.attach()
             }
         }
 
@@ -95,29 +101,35 @@ class EditPostFragment : Fragment(), OnClickListener {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 selectedImages.clear()
-                result.data?.let { data ->
-                    val clipData = data.clipData
-                    if (clipData != null) {
-                        for (i in 0 until clipData.itemCount) {
-                            val uri = clipData.getItemAt(i).uri
-                            val bitmap = uriToBitmap(uri)
-                            if (bitmap != null) {
-                                selectedImages.add(bitmap)
+                try {
+                    result.data?.let { data ->
+                        val clipData = data.clipData
+                        if (clipData != null) {
+                            for (i in 0 until clipData.itemCount) {
+                                val uri = clipData.getItemAt(i).uri
+                                val bitmap = uriToBitmap(uri)
+                                if (bitmap != null) {
+                                    selectedImages.add(bitmap)
+                                }
+                            }
+                        } else {
+                            data.data?.let { uri ->
+                                val bitmap = uriToBitmap(uri)
+                                if (bitmap != null) {
+                                    selectedImages.add(bitmap)
+                                }
                             }
                         }
-                    } else {
-                        data.data?.let { uri ->
-                            val bitmap = uriToBitmap(uri)
-                            if (bitmap != null) {
-                                selectedImages.add(bitmap)
-                            }
-                        }
-                    }
 
-                    // Update the ViewPager2 adapter with the selected images
-                    val adapter = ImageAdapter(selectedImages)
-                    imageView.adapter = adapter
+                        // Update the ViewPager2 adapter with the selected images
+                        val adapter = ImageAdapter(selectedImages)
+                        imageView.adapter = adapter
+                        TabLayoutMediator(tabIndicator, imageView) { _, _ -> }.attach()
+                    }
+                }catch (e: Exception){
+                    Toast.makeText(requireContext(), "Ocurrió un error al seleccionar imágenes", Toast.LENGTH_SHORT).show()
                 }
+
             }
         }
 
@@ -149,6 +161,7 @@ class EditPostFragment : Fragment(), OnClickListener {
             if(title.isEmpty()){
                 titleTxt.setBackgroundResource(R.drawable.input_sytle_error)
                 isValid = false
+                titleTxt.error="No puede estar vacio el titulo"
             }else{
                 titleTxt.setBackgroundResource(R.drawable.input_style)
             }
@@ -156,6 +169,7 @@ class EditPostFragment : Fragment(), OnClickListener {
             if(descripcion.isEmpty()){
                 descriptionTxt.setBackgroundResource(R.drawable.input_sytle_error)
                 isValid = false
+                descriptionTxt.error="No puede estar vacio el descripcion"
             }else{
                 descriptionTxt.setBackgroundResource(R.drawable.input_style)
             }

@@ -12,7 +12,7 @@ import com.psm.unitrip.R
 import com.psm.unitrip.classes.ChatItem
 import com.psm.unitrip.classes.PostItem
 
-class PostItemAdapter(private var postList: MutableList<Post>, private val onClick: (Post) -> Unit): RecyclerView.Adapter<PostItemHolder>() {
+class PostItemAdapter(public var postList: MutableList<Post>, private val onClick: (Post) -> Unit): RecyclerView.Adapter<PostItemHolder>() {
 
     fun updatePosts(newPosts: List<Post>) {
         postList = newPosts.toMutableList()

@@ -141,6 +141,7 @@ class SignUpLast : Fragment(), OnClickListener {
 
                     var regexPhone = Regex("^(?:\\+52)? ?\\d{10}\$|^(?:\\+52)? ?\\(?\\d{2,3}\\)? ?\\d{3} ?\\d{4}\$")
                     var regexUser = Regex("^[0-9A-Za-zÑñÁáÉéÍíÓóÚú\\s]{2,20}\$")
+                    val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
 
                     val username = usernameTxt.text.toString()
                     val phone = phoneTxt.text.toString()
@@ -149,6 +150,7 @@ class SignUpLast : Fragment(), OnClickListener {
                     if(!regexUser.matches(username)){
                         isValid = false
                         usernameTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                        usernameTxt.error="Caracteres Invalidos en el Usuario"
                     }else{
                         usernameTxt.setBackgroundResource(R.drawable.input_style)
                     }
@@ -157,6 +159,7 @@ class SignUpLast : Fragment(), OnClickListener {
                         if(!regexPhone.matches(phone)){
                             isValid = false
                             phoneTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                            phoneTxt.error="Telefono Invalido"
                         }else{
                             phoneTxt.setBackgroundResource(R.drawable.input_style)
                         }
@@ -166,9 +169,10 @@ class SignUpLast : Fragment(), OnClickListener {
 
 
                     if(address.isNotEmpty()){
-                        if(address.length > 150){
+                        if(!regexDomicilio.matches(address)){
                             isValid = false
                             direccionTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                            direccionTxt.error="Direccion con formato Invalido"
                         }else{
                             direccionTxt.setBackgroundResource(R.drawable.input_style)
                         }
@@ -245,6 +249,7 @@ class SignUpLast : Fragment(), OnClickListener {
                                         }
                                     }
                                 }else{
+                                    loadIcon.visibility = View.GONE
                                     mostrarAlerta()
                                 }
                             }

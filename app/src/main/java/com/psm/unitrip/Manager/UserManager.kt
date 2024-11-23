@@ -144,7 +144,7 @@ class UserManager(private val api: UserService): Manager<Usuario> {
                                 }
 
                                 body.posts.forEach { post ->
-                                    UserApplication.dbHelper.insertPost(Post(0, post.title, post.description, post.precio, "A", post.location, post.idUsuario, "", "", post.arrayImagenes, ""))
+                                    UserApplication.dbHelper.insertPost(Post(0, post.title, post.description, post.precio, post.status, post.location, post.idUsuario, "", "", post.arrayImagenes, ""))
                                 }
 
                                 body.chats.forEach { chat ->

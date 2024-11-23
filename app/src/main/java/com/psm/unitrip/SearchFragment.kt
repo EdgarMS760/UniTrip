@@ -5,10 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -39,7 +41,11 @@ class SearchFragment : Fragment() {
     val createPostViewModel: CreatePostViewModel by activityViewModels()
     val editPostViewModel: EditPostViewModel by activityViewModels()
     val chatVM: ChatViewModel by activityViewModels()
+    private lateinit var searchView: SearchView
+    private lateinit var postAdapter: PostItemAdapter
     private var lastClickTime = 0L
+    private var postsList: List<Post> = emptyList()
+    private var selectedOrder = "Ordenar Por"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +76,21 @@ class SearchFragment : Fragment() {
 
         val loadIcon = root.findViewById<CircularProgressIndicator>(R.id.loadSearchIndicator)
 
+        searchView = root.findViewById<SearchView>(R.id.searchView)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                filterPosts(query.toString())
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterPosts(newText.toString())
+                return true
+            }
+        })
+
+
         loadIcon.visibility = View.VISIBLE
 
         val orderSpinner = root.findViewById<Spinner>(R.id.orderSpinner)
@@ -86,7 +107,9 @@ class SearchFragment : Fragment() {
 
         orderSpinner.adapter = adapter
 
-        val postAdapter = PostItemAdapter(mutableListOf()) { postItem ->
+
+
+        postAdapter = PostItemAdapter(mutableListOf()) { postItem ->
             val currentTime = System.currentTimeMillis()
             if (currentTime - lastClickTime > 500) {
                 lastClickTime = currentTime
@@ -134,6 +157,7 @@ class SearchFragment : Fragment() {
                 postManager?.getAll(user!!.idUsuario){posts->
                     loadIcon.visibility = View.GONE
                     if(posts != null){
+                        postsList = posts
                         postAdapter.updatePosts(posts)
                     }
                 }
@@ -141,8 +165,22 @@ class SearchFragment : Fragment() {
         }else{
             val posts: MutableList<Post> = UserApplication.dbHelper.selectPosts(SessionManager.getUsuario()!!.idUsuario)
             postAdapter.updatePosts(posts)
+            postsList = posts
             loadIcon.visibility = View.GONE
         }
+
+
+        orderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedOrder = orderOptions[position]
+                applyOrderToPosts(postAdapter.postList)
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+
+            }
+        }
+
 
         editPostViewModel.reset()
         createPostViewModel.reset()
@@ -150,5 +188,28 @@ class SearchFragment : Fragment() {
         return root
     }
 
+    fun filterPosts(query: String){
+
+        val filteredPostss = if (!query.isNullOrEmpty()) {
+            postsList.filter { post ->
+                post.title.contains(query, ignoreCase = true) || post.description.contains(query, ignoreCase = true)
+            }
+        } else {
+            postsList
+        }
+
+        applyOrderToPosts(filteredPostss)
+    }
+
+    fun applyOrderToPosts(filteredPosts: List<Post> = postsList) {
+        val sortedPosts = when (selectedOrder) {
+            "Por Precio" -> filteredPosts.sortedBy { it.precio.toDouble() }
+            "Por ID" -> filteredPosts.sortedBy { it.idPost }
+            "Por Usuario" -> filteredPosts.sortedBy { it.username }
+            else -> filteredPosts
+        }
+
+        postAdapter.updatePosts(sortedPosts)
+    }
 
 }

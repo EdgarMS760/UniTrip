@@ -33,6 +33,9 @@ class EditPostLastFragment : Fragment(), OnClickListener {
     val editPostViewModel: EditPostViewModel by activityViewModels()
     private lateinit var locationTxt: EditText
     private lateinit var priceTxt: EditText
+    private lateinit var btnPostC: Button
+    private var lastClickTime = 0L
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +54,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
         btnSaveC.setOnClickListener(this)
         val backCreateBtn = root.findViewById<ImageButton>(R.id.backEditBtn)
         backCreateBtn.setOnClickListener(this)
-        val btnPostC = root.findViewById<Button>(R.id.btnPostC)
+        btnPostC = root.findViewById<Button>(R.id.btnPostC)
         btnPostC.setOnClickListener(this)
 
 
@@ -147,7 +150,13 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                         .setDuration(300)
                 }
 
-            findNavController().navigate(R.id.action_editPostLastFragment_to_searchFragment)
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime > 500) {
+                lastClickTime = currentTime
+                findNavController().navigate(R.id.action_editPostLastFragment_to_searchFragment)
+            }
+
+
         }
 
         if(p0!!.id == R.id.btnCancelEPL){
@@ -159,7 +168,13 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                         .alpha(1f)
                         .setDuration(300)
                 }
-            mostrarAlerta()
+
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime > 500) {
+                lastClickTime = currentTime
+                mostrarAlerta()
+            }
+
         }
 
         if(p0!!.id == R.id.btnSaveEPL){
@@ -172,49 +187,54 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                         .setDuration(300)
                 }
 
-            if(editPostViewModel.status == "A"){
-                Toast.makeText(this.requireContext(), "Tu post ya ha sido posteado", Toast.LENGTH_SHORT).show()
-            }else{
-                var isValid = true
-                val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
-                val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
-
-                val locationStr = locationTxt.text.toString()
-                val price = priceTxt.text.toString()
-
-                if(!regexPrice.matches(price)){
-                    isValid = false
-                    priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime > 500) {
+                lastClickTime = currentTime
+                if(editPostViewModel.status == "A"){
+                    Toast.makeText(this.requireContext(), "Tu post ya ha sido posteado", Toast.LENGTH_SHORT).show()
                 }else{
-                    priceTxt.setBackgroundResource(R.drawable.input_style)
-                }
+                    var isValid = true
+                    val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
+                    val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
 
-                if(!regexDomicilio.matches(locationStr)){
-                    isValid = false
-                    locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
-                }else{
-                    locationTxt.setBackgroundResource(R.drawable.input_style)
-                }
+                    val locationStr = locationTxt.text.toString()
+                    val price = priceTxt.text.toString()
 
-                if(isValid){
-                    val listImg64: MutableList<String> = mutableListOf()
-
-                    if(editPostViewModel.images != null){
-                        editPostViewModel.images?.forEach { item ->
-                            val img = ImageUtilities.getByteArrayFromBitmap(item)
-                            val encodedString:String =  Base64.getEncoder().encodeToString(img)
-
-                            val strEncodeImage:String = "data:image/*;base64," + encodedString
-                            listImg64.add(strEncodeImage)
-                        }
+                    if(!regexPrice.matches(price)){
+                        isValid = false
+                        priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                        priceTxt.error = "Precio con caracteres invalidos"
+                    }else{
+                        priceTxt.setBackgroundResource(R.drawable.input_style)
                     }
 
-                    dbHelper.updateDraft(Post(editPostViewModel.idPost!!.toInt(), editPostViewModel.title.toString(), editPostViewModel.descripcion.toString(), price, "D", locationStr, 0, "", "", listImg64, ""))
-                    findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
-                }else{
-                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
+                    if(!regexDomicilio.matches(locationStr)){
+                        isValid = false
+                        locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                        locationTxt.error = "Direccion con formato Invalido"
+                    }else{
+                        locationTxt.setBackgroundResource(R.drawable.input_style)
+                    }
+
+                    if(isValid){
+                        val listImg64: MutableList<String> = mutableListOf()
+
+                        if(editPostViewModel.images != null){
+                            editPostViewModel.images?.forEach { item ->
+                                val img = ImageUtilities.getByteArrayFromBitmap(item)
+                                val encodedString:String =  Base64.getEncoder().encodeToString(img)
+
+                                val strEncodeImage:String = "data:image/*;base64," + encodedString
+                                listImg64.add(strEncodeImage)
+                            }
+                        }
+
+                        dbHelper.updateDraft(Post(editPostViewModel.idPost!!.toInt(), editPostViewModel.title.toString(), editPostViewModel.descripcion.toString(), price, "D", locationStr, 0, "", "", listImg64, ""))
+                        findNavController().navigate(R.id.action_editPostLastFragment_to_profileFragment)
+                    }
                 }
             }
+
         }
 
         if(p0!!.id == R.id.btnPostC){
@@ -229,6 +249,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
 
 
             if(NetworkUtils.isNetworkAvailable(requireContext())){
+
                 var isValid = true
                 val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
                 val regexDomicilio = Regex("^([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*(\\d+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+),\\s*([A-Za-zÁáÉéÍíÓóÚúÑñ\\s]+)\$")
@@ -239,6 +260,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                 if(!regexPrice.matches(price)){
                     isValid = false
                     priceTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    priceTxt.error = "Precio con caracteres invalidos"
                 }else{
                     priceTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -246,6 +268,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                 if(!regexDomicilio.matches(locationStr)){
                     isValid = false
                     locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
+                    locationTxt.error = "Direccion con formato Invalido"
                 }else{
                     locationTxt.setBackgroundResource(R.drawable.input_style)
                 }
@@ -307,7 +330,9 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                             val factory = ManagerFactory(RestEngine.getRestEngine())
                             val postManager = factory.createManager(Post::class.java)
 
+                            btnPostC.isEnabled = false
                             postManager!!.add(Post(0, editPostViewModel.title.toString(), editPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, "")){ success->
+                                btnPostC.isEnabled = true
                                 if(success){
                                     dbHelper.deleteDraft(editPostViewModel.idPost!!.toInt())
                                     dbHelper.insertPost(Post(0, editPostViewModel.title.toString(), editPostViewModel.descripcion.toString(), price, "A", locationStr, SessionManager.getUsuario()!!.idUsuario, "", "", listImg64, ""))
@@ -324,9 +349,9 @@ class EditPostLastFragment : Fragment(), OnClickListener {
 
                         }
                     }
-                }else{
-                    Toast.makeText(this.requireContext(), "Parametros Invalidos", Toast.LENGTH_SHORT).show()
                 }
+
+
             }else{
                 mostrarNoInternet()
             }
@@ -342,7 +367,14 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                         .alpha(1f)
                         .setDuration(300)
                 }
-            findNavController().navigate(R.id.action_editPostLastFragment_to_editPostFragment)
+
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime > 500) {
+                lastClickTime = currentTime
+                findNavController().navigate(R.id.action_editPostLastFragment_to_editPostFragment)
+            }
+
+
 
         }
 

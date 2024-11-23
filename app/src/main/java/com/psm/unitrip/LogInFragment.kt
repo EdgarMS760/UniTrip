@@ -171,6 +171,9 @@ class LogInFragment : Fragment(), OnClickListener {
                                 }
                             }
                         }else{
+                            loadIcon.visibility = View.GONE
+                            emailTxt.error = "Credenciales no coinciden"
+                            passTxt.error =  "Credenciales no coinciden"
                             Toast.makeText(activity?.applicationContext,"Fallo de Credenciales", Toast.LENGTH_LONG).show()
                             loadIcon.visibility = View.GONE
                         }

@@ -214,7 +214,7 @@ class DataDbHelper(var context: Context) :
         values.put(SetDB.tablePost.COL_TITLE, postInstance.title)
         values.put(SetDB.tablePost.COL_DESCRIPTION, postInstance.description)
         values.put(SetDB.tablePost.COL_PRECIO, postInstance.precio)
-        values.put(SetDB.tablePost.COL_STATUS, "A")
+        values.put(SetDB.tablePost.COL_STATUS, postInstance.status)
         values.put(SetDB.tablePost.COL_LOCATION, postInstance.location)
         values.put(SetDB.tablePost.COL_FECHACREACION, currentDate)
 
@@ -432,23 +432,27 @@ class DataDbHelper(var context: Context) :
 
     //Delete Functions
     public fun deletePost(intID: Int): Boolean {
-        val db = this.writableDatabase
-        var boolResult: Boolean = false
+        val database: SQLiteDatabase = this.writableDatabase
+        val values: ContentValues = ContentValues()
+        var boolResult: Boolean = true
+
+        values.put(SetDB.tablePost.COL_STATUS, "E")
+
+        val where: String = SetDB.tablePost.COL_IDPOST + "=?"
+
         try {
-            if(this.deleteImages(intID, db)){
-                val where: String = SetDB.tablePost.COL_IDPOST + "=?"
-                val _success = db.delete(SetDB.tablePost.TABLE_NAME, where, arrayOf(intID.toString()))
-                boolResult = Integer.parseInt("$_success") != -1
-            }
+            val result = database.update(
+                SetDB.tablePost.TABLE_NAME,
+                values,
+                where,
+                arrayOf(intID.toString())
+            )
 
-
-
-        } catch (e: java.lang.Exception) {
-
+        } catch (e: Exception) {
             Log.e("Execption", e.toString())
-        } finally {
-            db.close()
+            boolResult = false
         }
+        database.close()
 
         return boolResult
     }
@@ -608,6 +612,7 @@ class DataDbHelper(var context: Context) :
                     "FROM ${SetDB.tablePost.TABLE_NAME} P " +
                     "INNER JOIN Usuarios U ON P.${SetDB.tablePost.COL_IDUSUARIO} = U.idUsuario " +
                     "WHERE P.${SetDB.tablePost.COL_IDUSUARIO} = ? " +
+                    "AND P.${SetDB.tablePost.COL_STATUS} = 'A' " +
                     "ORDER BY P.${SetDB.tablePost.COL_FECHACREACION} DESC",
             arrayOf(userId.toString())
         )
@@ -680,6 +685,7 @@ class DataDbHelper(var context: Context) :
                     "FROM ${SetDB.tablePost.TABLE_NAME} P " +
                     "INNER JOIN Usuarios U ON P.${SetDB.tablePost.COL_IDUSUARIO} = U.idUsuario " +
                     "WHERE P.${SetDB.tablePost.COL_IDUSUARIO} != ? " +
+                    "AND P.${SetDB.tablePost.COL_STATUS} = 'A' " +
                     "ORDER BY P.${SetDB.tablePost.COL_FECHACREACION} DESC",
             arrayOf(userId.toString())
         )
