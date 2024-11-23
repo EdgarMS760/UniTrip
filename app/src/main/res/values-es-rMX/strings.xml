@@ -13,6 +13,7 @@
     <string name="userHint">Ingresa tu usuario</string>
     <string name="addressHint">Ingresa tu dirección (Opcional)</string>
     <string name="phoneHint">Ingresa tu telefono (Opcional)</string>
+    <string name="phoneHintEU">Ingresa tu telefono</string>
     <string name="emailView">Email:</string>
     <string name="passwordView">Contraseña:</string>
     <string name="firstNameView">Nombre:</string>
@@ -29,11 +30,12 @@
     <string name="fullNameViewPfp">Nombre Completo</string>
     <string name="usernameViewPfp">@Usuario</string>
     <string name="deleteBtnE">Eliminar</string>
-    <string name="saveBtnE">Guardar</string>
+    <string name="saveBtnE">Guardar Draft</string>
+    <string name="saveBtnU">Guardar</string>
     <string name="cancelBtnE">Cancelar</string>
     }<string name="nameChat">Gustavo Isai Gomez Alvarez</string>
     <string name="messageHintTxt">Mensaje</string>
-    <string name="locationBtn">Calle,Num,Col,Municipio,Estado</string>
+    <string name="locationBtn">Calle,Num.,Col.,Municipio,Estado</string>
     <string name="postBtn">Publicar</string>
     <string name="textLocationBtn">Ubicación:</string>
     <string name="titleEditPost">Editar Post</string>

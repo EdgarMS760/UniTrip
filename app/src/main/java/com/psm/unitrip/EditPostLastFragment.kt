@@ -191,7 +191,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
             if (currentTime - lastClickTime > 500) {
                 lastClickTime = currentTime
                 if(editPostViewModel.status == "A"){
-                    Toast.makeText(this.requireContext(), "Tu post ya ha sido posteado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this.requireContext(), "Tu post ya se encuentra en linea", Toast.LENGTH_SHORT).show()
                 }else{
                     var isValid = true
                     val regexPrice = Regex("^[0-9]+([.,][0-9]{1,2})?\$")
@@ -211,7 +211,7 @@ class EditPostLastFragment : Fragment(), OnClickListener {
                     if(!regexDomicilio.matches(locationStr)){
                         isValid = false
                         locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
-                        locationTxt.error = "Direccion con formato Invalido"
+                        locationTxt.error = "Direccion con formato Invalido, Ej: Camino, 2247, Sierra, China, Jalisco"
                     }else{
                         locationTxt.setBackgroundResource(R.drawable.input_style)
                     }

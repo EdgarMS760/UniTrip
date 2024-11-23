@@ -32,6 +32,7 @@ class LogInFragment : Fragment(), OnClickListener {
     private var listener: OnFragmentWelcomeActionsListener? = null
     private lateinit var emailTxt: EditText
     private lateinit var passTxt: EditText
+    private lateinit var LogBtn: Button
     private lateinit var loadIcon: CircularProgressIndicator
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +58,7 @@ class LogInFragment : Fragment(), OnClickListener {
         val root = inflater.inflate(R.layout.fragment_log_in, container, false)
         val backLogInBtn = root.findViewById<ImageButton>(R.id.backLogInBtn)
         backLogInBtn.setOnClickListener(this)
-        val LogBtn = root.findViewById<Button>(R.id.LogBtn)
+        LogBtn = root.findViewById<Button>(R.id.LogBtn)
         LogBtn.setOnClickListener(this)
         val signUpViewLI = root.findViewById<TextView>(R.id.signUpViewLI)
         signUpViewLI.setOnClickListener(this)
@@ -114,6 +115,7 @@ class LogInFragment : Fragment(), OnClickListener {
                     val email = emailTxt.text.toString()
                     val password = passTxt.text.toString()
                     loadIcon.visibility = View.VISIBLE
+                    LogBtn.isEnabled = false
                     SessionManager.logIn(email, password, requireContext()){ success ->
                         if(success){
                             val factory = ManagerFactory(RestEngine.getRestEngine())
@@ -123,6 +125,7 @@ class LogInFragment : Fragment(), OnClickListener {
 
                                 val fechaSync = PreferenceManager.getLastSync(requireContext())
                                 (userManager as? UserManager)?.sync(fechaSync.toString()) { state ->
+                                    LogBtn.isEnabled = true
                                     if(state){
                                         (userManager as? UserManager)?.syncUpdated(fechaSync.toString()) { synced ->
                                             val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
@@ -149,6 +152,7 @@ class LogInFragment : Fragment(), OnClickListener {
 
                             }else{
                                 (userManager as? UserManager)?.sync("1970-01-01 00:00:00") { state ->
+                                    LogBtn.isEnabled = true
                                     if(state){
                                         val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
                                             timeZone = TimeZone.getTimeZone("UTC")
@@ -171,6 +175,7 @@ class LogInFragment : Fragment(), OnClickListener {
                                 }
                             }
                         }else{
+                            LogBtn.isEnabled = true
                             loadIcon.visibility = View.GONE
                             emailTxt.error = "Credenciales no coinciden"
                             passTxt.error =  "Credenciales no coinciden"

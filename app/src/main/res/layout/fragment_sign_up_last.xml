@@ -133,7 +133,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/input_style"
             android:ems="10"
-            android:hint="@string/addressHint"
+            android:hint="@string/locationBtn"
             android:inputType="text"
             android:paddingHorizontal="8sp"
             android:paddingVertical="2sp"

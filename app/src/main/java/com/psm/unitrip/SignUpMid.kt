@@ -50,8 +50,8 @@ class SignUpMid : Fragment(), OnClickListener {
         nextMidBtn.setOnClickListener(this)
 
 
-        firstNameTxt = root.findViewById<EditText>(R.id.lastNameTxt)
-        lastNameTxt = root.findViewById<EditText>(R.id.nameTxt)
+        lastNameTxt = root.findViewById<EditText>(R.id.lastNameTxt)
+        firstNameTxt = root.findViewById<EditText>(R.id.nameTxt)
         passwordTxt = root.findViewById<EditText>(R.id.passTxtMid)
 
         if(registroViewModel.nombre != null){

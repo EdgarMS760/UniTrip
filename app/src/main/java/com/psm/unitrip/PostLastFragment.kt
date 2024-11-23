@@ -205,7 +205,7 @@ class PostLastFragment : Fragment(), OnClickListener {
                 if(!regexDomicilio.matches(locationStr)){
                     isValid = false
                     locationTxt.setBackgroundResource(R.drawable.input_sytle_error)
-                    locationTxt.error = "Direccion con formato Invalido"
+                    locationTxt.error = "Direccion con formato Invalido, Ej: Camino, 2247, Sierra, China, Jalisco"
                 }else{
                     locationTxt.setBackgroundResource(R.drawable.input_style)
                 }

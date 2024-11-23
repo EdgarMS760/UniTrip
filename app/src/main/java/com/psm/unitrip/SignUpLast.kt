@@ -40,6 +40,7 @@ class SignUpLast : Fragment(), OnClickListener {
     private lateinit var usernameTxt: EditText
     private lateinit var phoneTxt: EditText
     private lateinit var direccionTxt: EditText
+    private lateinit var registerBtn: Button
     private lateinit var loadIcon: CircularProgressIndicator
     val registroViewModel: RegistroViewModel by activityViewModels()
 
@@ -67,7 +68,7 @@ class SignUpLast : Fragment(), OnClickListener {
         val root = inflater.inflate(R.layout.fragment_sign_up_last, container, false)
         val backLastBtn =  root.findViewById<ImageButton>(R.id.backLastBtn)
         backLastBtn.setOnClickListener(this)
-        val registerBtn =  root.findViewById<Button>(R.id.registerBtn)
+        registerBtn =  root.findViewById<Button>(R.id.registerBtn)
         registerBtn.setOnClickListener(this)
         loadIcon = root.findViewById<CircularProgressIndicator>(R.id.loadSyncIndicator2)
 
@@ -172,7 +173,7 @@ class SignUpLast : Fragment(), OnClickListener {
                         if(!regexDomicilio.matches(address)){
                             isValid = false
                             direccionTxt.setBackgroundResource(R.drawable.input_sytle_error)
-                            direccionTxt.error="Direccion con formato Invalido"
+                            direccionTxt.error="Direccion con formato Invalido, Ej: Camino, 2247, Sierra, China, Jalisco"
                         }else{
                             direccionTxt.setBackgroundResource(R.drawable.input_style)
                         }
@@ -191,6 +192,7 @@ class SignUpLast : Fragment(), OnClickListener {
                         val strEncodeImage:String = "data:image/*;base64," + encodedString
 
                         if(userManager !== null){
+                            registerBtn.isEnabled = false
                             userManager.add(Usuario(0, registroViewModel.email.toString(), registroViewModel.password.toString(), registroViewModel.nombre.toString(), registroViewModel.apellido.toString(), username, phone, address, strEncodeImage)){success ->
                                 if(success){
                                     SessionManager.saveSession(requireContext())
@@ -199,6 +201,7 @@ class SignUpLast : Fragment(), OnClickListener {
 
                                         val fechaSync = PreferenceManager.getLastSync(requireContext())
                                         (userManager as? UserManager)?.sync(fechaSync.toString()) { state ->
+                                            registerBtn.isEnabled = true
                                             if(state){
                                                 (userManager as? UserManager)?.syncUpdated(fechaSync.toString()) { synced ->
                                                     val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
@@ -225,6 +228,7 @@ class SignUpLast : Fragment(), OnClickListener {
 
                                     }else{
                                         (userManager as? UserManager)?.sync("1970-01-01 00:00:00") { state ->
+                                            registerBtn.isEnabled = true
                                             if(state){
                                                 val utcFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
                                                     timeZone = TimeZone.getTimeZone("UTC")
@@ -249,6 +253,7 @@ class SignUpLast : Fragment(), OnClickListener {
                                         }
                                     }
                                 }else{
+                                    registerBtn.isEnabled = true
                                     loadIcon.visibility = View.GONE
                                     mostrarAlerta()
                                 }
