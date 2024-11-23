@@ -63,7 +63,7 @@ class PostItemHolder(view: View) : RecyclerView.ViewHolder(view) {
         descripcionView.text = PostItemModel.description
         fechaView.text = PostItemModel.fechaCreacion
         if(PostItemModel.idUsuario != SessionManager.getUsuario()?.idUsuario){
-            iconoEdit.setBackgroundResource(R.drawable.round_inbox_24)
+            iconoEdit.setBackgroundResource(R.drawable.baseline_forum_24)
         }else{
             iconoEdit.setBackgroundResource(R.drawable.baseline_edit_square_24)
         }
